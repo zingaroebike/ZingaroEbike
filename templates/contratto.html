@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contratto di Noleggio – ZingaroEbike</title>
+<title>Conferma Prenotazione – ZingaroEbike</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root { --verde: #2d7d46; --azzurro: #0077b6; --oro: #f4a81d; --scuro: #1a1a2e; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Poppins',sans-serif; background:#f8f9fa; color:#333; }
+  body { font-family:'Poppins',sans-serif; background:#f8f9fa; color:#333; min-height:100vh; display:flex; flex-direction:column; }
 
   nav {
     background:var(--scuro); color:white; padding:14px 40px;
@@ -17,354 +17,164 @@
   .logo { color:white; font-size:1.3rem; font-weight:800; text-decoration:none; }
   .logo span { color:var(--oro); }
 
-  .container { max-width:850px; margin:40px auto; padding:0 25px 60px; }
+  .container { max-width:600px; margin:40px auto; padding:0 20px 60px; flex:1; }
 
-  .contratto-header {
+  .header {
     background:linear-gradient(135deg, var(--scuro), var(--verde));
-    color:white; border-radius:20px; padding:35px 40px; margin-bottom:30px; text-align:center;
+    color:white; border-radius:20px; padding:30px 35px; margin-bottom:25px; text-align:center;
   }
-  .contratto-header h1 { font-size:1.8rem; font-weight:800; margin-bottom:8px; }
-  .contratto-header p { opacity:.85; font-size:.95rem; }
+  .header h1 { font-size:1.6rem; font-weight:800; margin-bottom:6px; }
+  .header p { opacity:.85; font-size:.9rem; }
 
-  .card {
-    background:white; border-radius:16px; padding:30px 35px;
+  /* RIEPILOGO */
+  .riepilogo {
+    background:white; border-radius:16px; padding:25px 30px;
+    box-shadow:0 3px 20px rgba(0,0,0,.07); margin-bottom:20px;
+    border-left:5px solid var(--verde);
+  }
+  .riepilogo h2 { font-size:1rem; font-weight:700; color:var(--verde); margin-bottom:15px; }
+  .dato-row { display:flex; justify-content:space-between; font-size:.88rem; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+  .dato-row:last-child { border-bottom:none; }
+  .dato-label { color:#777; }
+  .dato-val { font-weight:600; color:#333; text-align:right; }
+  .dato-totale .dato-label { color:var(--verde); font-weight:700; font-size:1rem; }
+  .dato-totale .dato-val { color:var(--verde); font-weight:800; font-size:1.2rem; }
+
+  /* ACCETTAZIONE */
+  .accettazione {
+    background:white; border-radius:16px; padding:25px 30px;
     box-shadow:0 3px 20px rgba(0,0,0,.07); margin-bottom:20px;
   }
-  .card h2 {
-    font-size:1.05rem; font-weight:800; color:var(--scuro);
-    margin-bottom:18px; padding-bottom:10px;
-    border-bottom:2px solid #f0f0f0;
-    display:flex; align-items:center; gap:10px;
-  }
-  .card p, .card li { font-size:.9rem; color:#444; line-height:1.8; margin-bottom:8px; }
-  .card ul { padding-left:20px; }
-  .card li { margin-bottom:6px; }
+  .accettazione h2 { font-size:1rem; font-weight:700; color:var(--scuro); margin-bottom:18px; }
 
-  /* SEZIONE CLAUSOLE VESSATORIE */
-  .vessatorie {
-    background:#fff8e1; border:2px solid var(--oro);
-    border-radius:16px; padding:30px 35px; margin-bottom:20px;
-  }
-  .vessatorie h2 {
-    font-size:1.05rem; font-weight:800; color:#856404;
-    margin-bottom:5px;
-  }
-  .vessatorie .avviso {
-    background:var(--oro); color:var(--scuro); padding:8px 15px;
-    border-radius:8px; font-size:.82rem; font-weight:700; margin-bottom:18px;
-    display:inline-block;
-  }
-  .clausola-item {
-    background:white; border:1px solid #f0d060; border-radius:10px;
-    padding:14px 18px; margin-bottom:12px;
-  }
-  .clausola-item p { font-size:.88rem; color:#444; margin-bottom:10px; }
-  .clausola-check {
-    display:flex; align-items:center; gap:10px; cursor:pointer;
-    background:#fffbf0; padding:10px 14px; border-radius:8px;
-    border:2px solid #f0d060; transition:all .2s;
-  }
-  .clausola-check:hover { border-color:var(--oro); background:#fff3cd; }
-  .clausola-check input[type="checkbox"] { width:20px; height:20px; cursor:pointer; accent-color:var(--verde); }
-  .clausola-check label { font-size:.85rem; font-weight:700; color:#856404; cursor:pointer; }
-
-  /* PRIVACY */
-  .privacy { background:#e8f4fd; border:2px solid var(--azzurro); border-radius:16px; padding:25px 35px; margin-bottom:20px; }
-  .privacy h2 { font-size:1.05rem; font-weight:800; color:var(--azzurro); margin-bottom:15px; }
-
-  /* ACCETTAZIONE FINALE */
-  .accettazione-box {
-    background:white; border-radius:16px; padding:30px 35px;
-    box-shadow:0 3px 20px rgba(0,0,0,.07); margin-bottom:20px;
-  }
   .check-row {
-    display:flex; align-items:flex-start; gap:14px; padding:14px;
+    display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
     border:2px solid #e0e0e0; border-radius:12px; margin-bottom:12px;
-    cursor:pointer; transition:border-color .2s;
+    cursor:pointer; transition:border-color .2s, background .2s;
   }
-  .check-row:hover { border-color:var(--verde); }
-  .check-row input[type="checkbox"] { width:22px; height:22px; margin-top:2px; flex-shrink:0; accent-color:var(--verde); cursor:pointer; }
-  .check-row label { font-size:.88rem; color:#333; cursor:pointer; line-height:1.6; }
+  .check-row:hover { border-color:var(--verde); background:#f9fffe; }
+  .check-row.checked { border-color:var(--verde); background:#f0f9f4; }
+  .check-row input[type="checkbox"] {
+    width:22px; height:22px; flex-shrink:0; margin-top:2px;
+    accent-color:var(--verde); cursor:pointer;
+  }
+  .check-row label { font-size:.87rem; color:#333; cursor:pointer; line-height:1.6; }
   .check-row label strong { color:var(--scuro); }
+  .check-row label a { color:var(--azzurro); }
 
-  .dati-prenotazione {
-    background:#f0f7f0; border-radius:12px; padding:18px 22px; margin-bottom:20px;
-    border-left:4px solid var(--verde);
-  }
-  .dati-prenotazione h3 { font-size:.95rem; font-weight:700; color:var(--verde); margin-bottom:12px; }
-  .dato-row { display:flex; gap:10px; font-size:.85rem; margin-bottom:6px; }
-  .dato-label { font-weight:600; color:#555; min-width:150px; }
-  .dato-val { color:#333; }
-
-  .btn-accetta {
+  .btn-paga {
     width:100%; background:var(--verde); color:white; border:none;
     padding:18px; border-radius:15px; font-size:1.1rem; font-weight:800;
     cursor:pointer; font-family:'Poppins',sans-serif; transition:all .3s;
     display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-top:5px;
   }
-  .btn-accetta:hover { background:#4caf50; transform:translateY(-2px); }
-  .btn-accetta:disabled { background:#ccc; cursor:not-allowed; transform:none; }
+  .btn-paga:hover:not(:disabled) { background:#4caf50; transform:translateY(-2px); }
+  .btn-paga:disabled { background:#ccc; cursor:not-allowed; transform:none; }
 
-  .firma-digitale {
-    text-align:center; font-size:.78rem; color:#888; margin-top:10px;
-  }
+  .nota { text-align:center; font-size:.75rem; color:#999; margin-top:10px; }
 
-  .progress-bar {
-    background:#e0e0e0; border-radius:10px; height:6px; margin-bottom:25px;
+  .btn-back {
+    display:inline-flex; align-items:center; gap:6px;
+    color:#888; font-size:.85rem; text-decoration:none; margin-bottom:20px;
   }
-  .progress-fill {
-    background:linear-gradient(90deg, var(--verde), var(--azzurro));
-    height:100%; border-radius:10px; width:66%;
-    transition:width .3s;
-  }
-  .progress-label { font-size:.8rem; color:#888; margin-bottom:8px; }
+  .btn-back:hover { color:var(--scuro); }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="/" class="logo">Zingaro<span>Ebike</span></a>
-  <span style="color:#aaa;font-size:.85rem;">Passaggio 2 di 3 — Contratto di noleggio</span>
+  <span style="color:#aaa;font-size:.85rem;">Conferma prenotazione</span>
 </nav>
 
 <div class="container">
 
-  <div class="contratto-header">
-    <h1>📋 Contratto di Noleggio E-Bike</h1>
-    <p>Leggi attentamente le condizioni prima di procedere al pagamento.<br>
-    La doppia accettazione è richiesta per le clausole ai sensi dell'art. 1341 c.c.</p>
+  <a href="/#prenota" class="btn-back">← Torna al modulo</a>
+
+  <div class="header">
+    <h1>📋 Conferma la tua prenotazione</h1>
+    <p>Controlla il riepilogo e accetta le condizioni per procedere al pagamento</p>
   </div>
 
-  <div class="progress-label">Stai completando: Prenotazione → <strong>Contratto</strong> → Pagamento</div>
-  <div class="progress-bar"><div class="progress-fill"></div></div>
-
-  <!-- DATI PRENOTAZIONE -->
-  <div class="dati-prenotazione" id="riepilogo-prenotazione">
-    <h3>📌 Riepilogo prenotazione</h3>
-    <div id="dati-content">Caricamento dati...</div>
-  </div>
-
-  <!-- ART. 1 — PARTI -->
-  <div class="card">
-    <h2>📌 Art. 1 — Parti del contratto</h2>
-    <p><strong>Noleggiatore:</strong> Terraferma Cooperativa Sociale – P.IVA 02539220810, con sede a Castellammare del Golfo (TP), che opera il servizio ZingaroEbike.</p>
-    <p><strong>Nologgiatore:</strong> Il cliente come indicato nel modulo di prenotazione online.</p>
-    <p>Con la doppia accettazione del presente contratto, le parti concordano le seguenti condizioni di noleggio.</p>
-  </div>
-
-  <!-- ART. 2 — OGGETTO -->
-  <div class="card">
-    <h2>🚲 Art. 2 — Oggetto del contratto</h2>
-    <p>Il presente contratto ha per oggetto il noleggio temporaneo di una o più biciclette elettriche a pedalata assistita (e-bike) da parte di ZingaroEbike al cliente.</p>
-    <p>Le e-bike vengono consegnate efficienti, pulite e con batteria carica al luogo concordato.</p>
-    <p>La consegna avviene entro le ore 21:00 gratuitamente; oltre le ore 21:00 è previsto un supplemento di <strong>€10,00</strong>.</p>
-  </div>
-
-  <!-- ART. 3 — DURATA E RESTITUZIONE -->
-  <div class="card">
-    <h2>⏱️ Art. 3 — Durata e restituzione</h2>
-    <ul>
-      <li>Il noleggio può essere a <strong>mezza giornata</strong> (fino a 6 ore) o <strong>giornata intera</strong> (fino a 24 ore dalla consegna).</li>
-      <li>Le bici devono essere restituite entro il termine concordato nel luogo stabilito.</li>
-      <li>In caso di ritardo nella restituzione non comunicato, verrà addebitato un extra di <strong>€5,00 per ora</strong> di ritardo.</li>
-      <li>Il noleggiatore si riserva il diritto di recuperare il mezzo in caso di mancata restituzione oltre le 2 ore dal termine concordato.</li>
-    </ul>
-  </div>
-
-  <!-- ART. 4 — UTILIZZO -->
-  <div class="card">
-    <h2>⚠️ Art. 4 — Norme di utilizzo</h2>
-    <ul>
-      <li>Le e-bike sono omologate per percorsi stradali e sterrati leggeri; è vietato l'utilizzo su percorsi estremi o fuori strada impervi.</li>
-      <li>Il cliente deve rispettare il Codice della Strada e le norme locali sul ciclismo.</li>
-      <li>È obbligatorio l'uso del casco (fornito su richiesta).</li>
-      <li>È vietato cedere la bici a terzi non indicati nel contratto.</li>
-      <li>È vietato trasportare passeggeri sulla bici.</li>
-      <li>Il cliente è tenuto a conservare la bici con la massima diligenza.</li>
-      <li>In caso di guasto o incidente, il cliente deve contattare immediatamente ZingaroEbike al numero indicato.</li>
-      <li>È vietato modificare o manomettere qualsiasi componente della bici.</li>
-    </ul>
-  </div>
-
-  <!-- ART. 5 — RESPONSABILITÀ DANNI -->
-  <div class="card">
-    <h2>🔧 Art. 5 — Responsabilità per danni</h2>
-    <ul>
-      <li>Il cliente è responsabile di tutti i danni causati alla bici durante il periodo di noleggio, compresi danni da caduta, urto, uso improprio.</li>
-      <li>I danni verranno valutati al termine del noleggio da personale ZingaroEbike.</li>
-      <li>Il costo delle riparazioni sarà comunicato entro 48 ore e addebitato al cliente.</li>
-      <li>Danni lievi (graffi superficiali): <strong>€20 – €80</strong></li>
-      <li>Danni medi (parti meccaniche): <strong>€80 – €300</strong></li>
-      <li>Danni gravi / totale perdita: fino al <strong>valore commerciale del mezzo</strong></li>
-      <li>ZingaroEbike declina ogni responsabilità per incidenti, infortuni o danni a terzi causati dal cliente durante il noleggio.</li>
-    </ul>
-  </div>
-
-  <!-- ART. 6 — FURTO -->
-  <div class="card">
-    <h2>🔒 Art. 6 — Furto</h2>
-    <ul>
-      <li>In caso di furto, il cliente deve sporgere denuncia alle autorità competenti entro 24 ore e consegnare copia della denuncia a ZingaroEbike.</li>
-      <li>Il cliente è responsabile del valore commerciale della bici se il furto avviene per negligenza (bici non assicurata con il lucchetto fornito).</li>
-      <li>Se la bici era correttamente assicurata con il lucchetto fornito al momento del furto, la responsabilità del cliente è limitata a <strong>€150,00</strong> (franchigia).</li>
-      <li>In assenza di denuncia, il cliente risponde dell'intero valore commerciale del mezzo.</li>
-    </ul>
-  </div>
-
-  <!-- ART. 7 — CANCELLAZIONE E RIMBORSO -->
-  <div class="card">
-    <h2>↩️ Art. 7 — Cancellazione e rimborso</h2>
-    <ul>
-      <li><strong>Cancellazione oltre 48 ore prima:</strong> rimborso completo</li>
-      <li><strong>Cancellazione tra 24 e 48 ore prima:</strong> rimborso del 50%</li>
-      <li><strong>Cancellazione entro 24 ore:</strong> nessun rimborso</li>
-      <li><strong>Cancellazione per maltempo estremo</strong> (allerta meteo ufficiale): rimborso completo o data alternativa</li>
-      <li>Le richieste di rimborso vanno inviate via WhatsApp o email a ZingaroEbike.</li>
-    </ul>
-  </div>
-
-  <!-- ART. 8 — CLAUSOLE VESSATORIE (DOPPIA ACCETTAZIONE) -->
-  <div class="vessatorie">
-    <h2>⚖️ Art. 8 — Clausole che richiedono specifica approvazione</h2>
-    <div class="avviso">⚠️ AI SENSI DELL'ART. 1341 COMMA 2 C.C. — RICHIEDE DOPPIA ACCETTAZIONE</div>
-    <p style="font-size:.85rem;color:#666;margin-bottom:18px;">Le seguenti clausole, per la loro natura, richiedono una specifica e separata accettazione. Leggi ciascuna con attenzione e spunta la casella per accettarla.</p>
-
-    <div class="clausola-item">
-      <p><strong>8.1 — Limitazione di responsabilità del noleggiatore:</strong> ZingaroEbike non risponde di danni fisici, infortuni o danni a terzi causati dall'utilizzo della e-bike da parte del cliente. Il cliente utilizza il mezzo a proprio rischio e pericolo, manlevando ZingaroEbike da qualsiasi pretesa risarcitoria (art. 1341 c.c.).</p>
-      <label class="clausola-check" for="v1">
-        <input type="checkbox" id="v1" onchange="verificaAccettazione()">
-        <label for="v1">✍️ Ho letto e accetto specificamente la clausola 8.1 – Limitazione responsabilità</label>
-      </label>
-    </div>
-
-    <div class="clausola-item">
-      <p><strong>8.2 — Responsabilità integrale per furto senza lucchetto:</strong> In caso di furto della e-bike non assicurata con il lucchetto fornito, il cliente è responsabile dell'intero valore commerciale del mezzo, senza limite di importo (art. 1341 c.c.).</p>
-      <label class="clausola-check" for="v2">
-        <input type="checkbox" id="v2" onchange="verificaAccettazione()">
-        <label for="v2">✍️ Ho letto e accetto specificamente la clausola 8.2 – Furto senza lucchetto</label>
-      </label>
-    </div>
-
-    <div class="clausola-item">
-      <p><strong>8.3 — Mancato rimborso per cancellazione tardiva:</strong> In caso di cancellazione entro 24 ore dalla data di noleggio, il cliente non ha diritto ad alcun rimborso dell'importo pagato (art. 1341 c.c.).</p>
-      <label class="clausola-check" for="v3">
-        <input type="checkbox" id="v3" onchange="verificaAccettazione()">
-        <label for="v3">✍️ Ho letto e accetto specificamente la clausola 8.3 – Nessun rimborso cancellazione tardiva</label>
-      </label>
-    </div>
-
-    <div class="clausola-item">
-      <p><strong>8.4 — Addebito automatico danni:</strong> Il cliente autorizza ZingaroEbike ad addebitare il costo delle riparazioni per i danni accertati al termine del noleggio, previa comunicazione scritta (art. 1341 c.c.).</p>
-      <label class="clausola-check" for="v4">
-        <input type="checkbox" id="v4" onchange="verificaAccettazione()">
-        <label for="v4">✍️ Ho letto e accetto specificamente la clausola 8.4 – Addebito automatico danni</label>
-      </label>
+  <!-- RIEPILOGO -->
+  <div class="riepilogo">
+    <h2>📌 Riepilogo prenotazione</h2>
+    <div id="dati-content">
+      <div class="dato-row"><span class="dato-label">Caricamento...</span></div>
     </div>
   </div>
 
-  <!-- PRIVACY -->
-  <div class="privacy">
-    <h2>🔒 Privacy e GDPR</h2>
-    <p style="font-size:.88rem;color:#444;line-height:1.8;">
-      I dati personali forniti saranno trattati da <strong>Terraferma Cooperativa Sociale</strong> (Titolare del trattamento) esclusivamente per la gestione del contratto di noleggio e per comunicazioni relative al servizio, ai sensi del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003.
-      I dati non saranno ceduti a terzi. Il cliente ha diritto di accesso, rettifica e cancellazione dei propri dati contattando <strong>info@zingaroebike.it</strong>.
-    </p>
-  </div>
+  <!-- ACCETTAZIONE -->
+  <div class="accettazione">
+    <h2>✅ Accettazione</h2>
 
-  <!-- ACCETTAZIONE FINALE -->
-  <div class="accettazione-box">
-    <h2 style="font-size:1.1rem;font-weight:800;color:var(--scuro);margin-bottom:20px;">✅ Accettazione del contratto</h2>
-
-    <div class="check-row" onclick="toggleCheck('acc1')">
-      <input type="checkbox" id="acc1" onchange="verificaAccettazione()">
-      <label for="acc1" onclick="event.stopPropagation()">
-        <strong>Prima firma — Accettazione generale:</strong><br>
-        Dichiaro di aver letto integralmente il contratto di noleggio ZingaroEbike e di accettarne tutti i termini e le condizioni generali (Art. 1 – 7).
+    <div class="check-row" id="row-condizioni" onclick="toggleCheck('condizioni')">
+      <input type="checkbox" id="condizioni" onchange="aggiorna()">
+      <label for="condizioni" onclick="event.stopPropagation()">
+        <strong>Condizioni di noleggio</strong><br>
+        Dichiaro di aver letto e di accettare le condizioni di noleggio: utilizzo responsabile della e-bike, restituzione entro i termini concordati, responsabilità per danni o furto causati da negligenza, politica di cancellazione (rimborso completo oltre 48h, 50% tra 24-48h, nessun rimborso entro 24h).
       </label>
     </div>
 
-    <div class="check-row" onclick="toggleCheck('acc2')">
-      <input type="checkbox" id="acc2" onchange="verificaAccettazione()">
-      <label for="acc2" onclick="event.stopPropagation()">
-        <strong>Seconda firma — Clausole specifiche (art. 1341 c.c.):</strong><br>
-        Dichiaro di aver letto e di approvare specificamente le clausole 8.1, 8.2, 8.3 e 8.4 indicate nell'Art. 8, ai sensi e per gli effetti dell'art. 1341, comma 2, del Codice Civile italiano.
-      </label>
-    </div>
-
-    <div class="check-row" onclick="toggleCheck('acc3')">
-      <input type="checkbox" id="acc3" onchange="verificaAccettazione()">
-      <label for="acc3" onclick="event.stopPropagation()">
-        <strong>Privacy:</strong><br>
-        Acconsento al trattamento dei miei dati personali per la gestione del noleggio ai sensi del GDPR (Reg. UE 2016/679).
+    <div class="check-row" id="row-privacy" onclick="toggleCheck('privacy')">
+      <input type="checkbox" id="privacy" onchange="aggiorna()">
+      <label for="privacy" onclick="event.stopPropagation()">
+        <strong>Privacy (GDPR)</strong><br>
+        Acconsento al trattamento dei miei dati personali da parte di Terraferma Cooperativa Sociale esclusivamente per la gestione della prenotazione, ai sensi del Reg. UE 2016/679.
       </label>
     </div>
 
     <br>
-    <button class="btn-accetta" id="btn-accetta" disabled onclick="accettaContratto()">
-      🔒 Firma digitalmente e procedi al pagamento
+    <button class="btn-paga" id="btn-paga" disabled onclick="procediPagamento()">
+      🔒 Accetta e procedi al pagamento
     </button>
-    <div class="firma-digitale">
-      La tua accettazione online ha valore legale ai sensi del D.Lgs. 82/2005 (Codice del Consumo) e dell'art. 1341 c.c.<br>
-      Verrà registrata con data, ora e IP per tutela di entrambe le parti.
-    </div>
+    <p class="nota">Pagamento sicuro con carta di credito, PayPal o Google Pay</p>
   </div>
 
 </div>
 
 <script>
-// Recupera i dati dalla prenotazione (passati via sessionStorage)
 const prenotazione = JSON.parse(sessionStorage.getItem('prenotazione_dati') || '{}');
 
 // Mostra riepilogo
 const cont = document.getElementById('dati-content');
 if (prenotazione.nome) {
   const nomi_bici = { city: '🚲 E-Bike City', mtb: '🚵 E-MTB Trail', gruppo: '👥 Pacchetto Gruppo' };
-  const durata_label = prenotazione.durata === 'giornata' ? 'Giornata intera (24h)' : 'Mezza giornata';
+  const durata_label = prenotazione.durata === 'giornata' ? 'Giornata intera' : 'Mezza giornata';
   cont.innerHTML = `
-    <div class="dato-row"><span class="dato-label">Cliente:</span><span class="dato-val">${prenotazione.nome} ${prenotazione.cognome}</span></div>
-    <div class="dato-row"><span class="dato-label">Email:</span><span class="dato-val">${prenotazione.email}</span></div>
-    <div class="dato-row"><span class="dato-label">Tipo bici:</span><span class="dato-val">${nomi_bici[prenotazione.tipo_bici] || prenotazione.tipo_bici}</span></div>
-    <div class="dato-row"><span class="dato-label">Numero bici:</span><span class="dato-val">${prenotazione.num_bici}</span></div>
-    <div class="dato-row"><span class="dato-label">Durata:</span><span class="dato-val">${durata_label}</span></div>
-    <div class="dato-row"><span class="dato-label">Data:</span><span class="dato-val">${prenotazione.data_ritiro}</span></div>
-    <div class="dato-row"><span class="dato-label">Ora:</span><span class="dato-val">${prenotazione.ora_ritiro}</span></div>
-    <div class="dato-row"><span class="dato-label">Consegna:</span><span class="dato-val">${prenotazione.indirizzo_consegna}</span></div>
-    <div class="dato-row"><strong><span class="dato-label">Totale:</span><span class="dato-val" style="color:var(--verde);font-size:1.1rem;">€${prenotazione.totale_euro || '—'}</span></strong></div>
+    <div class="dato-row"><span class="dato-label">Cliente</span><span class="dato-val">${prenotazione.nome} ${prenotazione.cognome}</span></div>
+    <div class="dato-row"><span class="dato-label">Email</span><span class="dato-val">${prenotazione.email}</span></div>
+    <div class="dato-row"><span class="dato-label">Telefono</span><span class="dato-val">${prenotazione.telefono}</span></div>
+    <div class="dato-row"><span class="dato-label">Data</span><span class="dato-val">${prenotazione.data_ritiro} ore ${prenotazione.ora_ritiro}</span></div>
+    <div class="dato-row"><span class="dato-label">Bici</span><span class="dato-val">${nomi_bici[prenotazione.tipo_bici] || prenotazione.tipo_bici} × ${prenotazione.num_bici}</span></div>
+    <div class="dato-row"><span class="dato-label">Durata</span><span class="dato-val">${durata_label}</span></div>
+    <div class="dato-row"><span class="dato-label">Consegna</span><span class="dato-val">${prenotazione.indirizzo_consegna || '—'}</span></div>
+    <div class="dato-row dato-totale"><span class="dato-label">Totale</span><span class="dato-val">€${prenotazione.totale_euro || '—'}</span></div>
   `;
 } else {
-  cont.innerHTML = '<span style="color:#888">Nessun dato prenotazione trovato. <a href="/#prenota">Torna alla prenotazione</a></span>';
+  cont.innerHTML = '<div class="dato-row"><span class="dato-label" style="color:#c00">Nessun dato trovato. <a href="/#prenota">Torna alla prenotazione →</a></span></div>';
 }
 
 function toggleCheck(id) {
   const cb = document.getElementById(id);
   cb.checked = !cb.checked;
-  verificaAccettazione();
+  aggiorna();
 }
 
-function verificaAccettazione() {
-  const tutteVessatorie = ['v1','v2','v3','v4'].every(id => document.getElementById(id).checked);
-  const tutteGenerali = ['acc1','acc2','acc3'].every(id => document.getElementById(id).checked);
-  const btn = document.getElementById('btn-accetta');
-  btn.disabled = !(tutteVessatorie && tutteGenerali);
-  if (!btn.disabled) {
-    btn.style.background = 'var(--verde)';
-    btn.innerHTML = '🔒 Firma digitalmente e procedi al pagamento';
-  }
+function aggiorna() {
+  const ok = document.getElementById('condizioni').checked && document.getElementById('privacy').checked;
+  document.getElementById('btn-paga').disabled = !ok;
+  document.getElementById('row-condizioni').classList.toggle('checked', document.getElementById('condizioni').checked);
+  document.getElementById('row-privacy').classList.toggle('checked', document.getElementById('privacy').checked);
 }
 
-async function accettaContratto() {
-  const btn = document.getElementById('btn-accetta');
+async function procediPagamento() {
+  const btn = document.getElementById('btn-paga');
   btn.disabled = true;
-  btn.innerHTML = '⏳ Invio prenotazione in corso...';
+  btn.innerHTML = '⏳ Preparazione pagamento...';
 
-  // Aggiungi consenso al contratto ai dati
-  const dati = {
-    ...prenotazione,
-    contratto_accettato: true,
-    contratto_data: new Date().toISOString(),
-    clausole_vessatorie_accettate: true,
-    privacy_accettata: true
-  };
+  const dati = { ...prenotazione, contratto_accettato: true, privacy_accettata: true };
 
   try {
     const res = await fetch('/api/prenota', {
@@ -378,12 +188,12 @@ async function accettaContratto() {
     } else {
       alert('Errore: ' + (result.errore || 'Riprova'));
       btn.disabled = false;
-      btn.innerHTML = '🔒 Firma digitalmente e procedi al pagamento';
+      btn.innerHTML = '🔒 Accetta e procedi al pagamento';
     }
   } catch(e) {
     alert('Errore di connessione. Riprova.');
     btn.disabled = false;
-    btn.innerHTML = '🔒 Firma digitalmente e procedi al pagamento';
+    btn.innerHTML = '🔒 Accetta e procedi al pagamento';
   }
 }
 </script>
