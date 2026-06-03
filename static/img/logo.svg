@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0077b6"/>
+      <stop offset="100%" style="stop-color:#2d7d46"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0077b6"/>
+      <stop offset="100%" style="stop-color:#2d7d46"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sfondo cerchio -->
+  <circle cx="200" cy="200" r="195" fill="url(#bgGrad)"/>
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#f4a81d" stroke-width="3"/>
+
+
+
+  <!-- TESTO ZINGARO -->
+  <text x="200" y="185"
+    font-family="'Arial Black', sans-serif"
+    font-weight="900"
+    font-size="52"
+    letter-spacing="3"
+    text-anchor="middle"
+    fill="white">ZINGARO</text>
+
+  <!-- Linea oro -->
+  <rect x="90" y="196" width="220" height="3" rx="1.5" fill="#f4a81d"/>
+
+  <!-- TESTO EBIKE -->
+  <text x="200" y="235"
+    font-family="'Arial Black', sans-serif"
+    font-weight="900"
+    font-size="42"
+    letter-spacing="10"
+    text-anchor="middle"
+    fill="#f4a81d">EBIKE</text>
+
+  <!-- Sottotitolo -->
+  <text x="200" y="272"
+    font-family="Arial, sans-serif"
+    font-weight="400"
+    font-size="12"
+    letter-spacing="3"
+    text-anchor="middle"
+    fill="rgba(255,255,255,0.75)">CASTELLAMMARE DEL GOLFO</text>
+
+</svg>

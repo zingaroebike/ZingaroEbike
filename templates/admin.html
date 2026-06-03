@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – ZingaroEbike</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins',sans-serif; background:#f0f2f5; color:#333; }
+  header { background:#1a1a2e; color:white; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:1.4rem; } header h1 span { color:#f4a81d; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding:30px 40px 0; }
+  .stat-card { background:white; border-radius:15px; padding:25px; box-shadow:0 2px 15px rgba(0,0,0,.07); }
+  .stat-card h3 { font-size:.85rem; color:#999; margin-bottom:8px; text-transform:uppercase; }
+  .stat-card .num { font-size:2rem; font-weight:800; }
+  .verde { color:#2d7d46; } .oro { color:#f4a81d; } .blu { color:#0077b6; } .rosso { color:#e74c3c; }
+  .container { padding:30px 40px; }
+  .filter-bar { display:flex; gap:15px; margin-bottom:25px; align-items:center; flex-wrap:wrap; }
+  .filter-bar input, .filter-bar select {
+    padding:10px 16px; border:2px solid #e0e0e0; border-radius:10px;
+    font-family:'Poppins',sans-serif; font-size:.9rem; outline:none;
+  }
+  .filter-bar input:focus, .filter-bar select:focus { border-color:#2d7d46; }
+  table { width:100%; background:white; border-radius:15px; overflow:hidden; box-shadow:0 2px 15px rgba(0,0,0,.07); border-collapse:collapse; }
+  th { background:#1a1a2e; color:white; padding:15px 18px; text-align:left; font-size:.85rem; }
+  td { padding:14px 18px; border-bottom:1px solid #f0f0f0; font-size:.9rem; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:#f8f9fa; }
+  .badge { padding:4px 12px; border-radius:20px; font-size:.8rem; font-weight:600; }
+  .badge.attesa { background:#fff8e1; color:#f57f17; }
+  .badge.confermata { background:#e8f5e9; color:#2d7d46; }
+  .badge.annullata { background:#ffebee; color:#c62828; }
+  .stato-select { padding:5px 10px; border:1px solid #ddd; border-radius:8px; font-size:.85rem; cursor:pointer; }
+  @media(max-width:768px) { .stats{grid-template-columns:1fr 1fr;} .container,.stats{padding:20px;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Zingaro<span>Ebike</span> – Pannello Admin</h1>
+  <a href="/" style="color:#f4a81d; text-decoration:none;"><i class="fas fa-home"></i> Vai al sito</a>
+</header>
+
+<div class="stats">
+  <div class="stat-card"><h3>Totale Prenotazioni</h3><div class="num blu" id="s-tot">–</div></div>
+  <div class="stat-card"><h3>In Attesa</h3><div class="num oro" id="s-att">–</div></div>
+  <div class="stat-card"><h3>Confermate</h3><div class="num verde" id="s-conf">–</div></div>
+  <div class="stat-card"><h3>Bici Prenotate Oggi</h3><div class="num rosso" id="s-oggi">–</div></div>
+</div>
+
+<div class="container">
+  <div class="filter-bar">
+    <input type="text" id="cerca" placeholder="🔍 Cerca nome, email...">
+    <select id="filtro-stato">
+      <option value="">Tutti gli stati</option>
+      <option value="in attesa">In attesa</option>
+      <option value="confermata">Confermata</option>
+      <option value="annullata">Annullata</option>
+    </select>
+    <input type="date" id="filtro-data">
+  </div>
+  <table id="tabella">
+    <thead>
+      <tr>
+        <th>#</th><th>Nome</th><th>Telefono</th><th>Data Ritiro</th>
+        <th>Ora</th><th>Bici</th><th>Percorso</th><th>Stato</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+let tutte = [];
+
+async function carica() {
+  const res = await fetch('/api/prenotazioni');
+  tutte = await res.json();
+  aggiorna();
+  const oggi = new Date().toISOString().split('T')[0];
+  document.getElementById('s-tot').textContent = tutte.length;
+  document.getElementById('s-att').textContent = tutte.filter(p=>p.stato==='in attesa').length;
+  document.getElementById('s-conf').textContent = tutte.filter(p=>p.stato==='confermata').length;
+  const biciOggi = tutte.filter(p=>p.data_ritiro===oggi && p.stato!=='annullata').reduce((a,p)=>a+(+p.num_bici||0),0);
+  document.getElementById('s-oggi').textContent = biciOggi;
+}
+
+function aggiorna() {
+  const cerca = document.getElementById('cerca').value.toLowerCase();
+  const stato = document.getElementById('filtro-stato').value;
+  const data = document.getElementById('filtro-data').value;
+  let filtrate = tutte.filter(p => {
+    const matchCerca = !cerca || (p.nome+p.cognome+p.email).toLowerCase().includes(cerca);
+    const matchStato = !stato || p.stato === stato;
+    const matchData = !data || p.data_ritiro === data;
+    return matchCerca && matchStato && matchData;
+  });
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = filtrate.length === 0
+    ? '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px">Nessuna prenotazione trovata</td></tr>'
+    : filtrate.map(p => `
+      <tr>
+        <td><strong>#${p.id}</strong></td>
+        <td><strong>${p.nome} ${p.cognome}</strong><br><small style="color:#999">${p.email}</small></td>
+        <td>${p.telefono}</td>
+        <td>${p.data_ritiro}</td>
+        <td>${p.ora_ritiro}</td>
+        <td><strong>${p.num_bici}</strong></td>
+        <td style="font-size:.8rem;color:#666">${p.tipo_percorso||'–'}</td>
+        <td>
+          <select class="stato-select" onchange="cambiaStato(${p.id}, this.value)">
+            <option ${p.stato==='in attesa'?'selected':''} value="in attesa">⏳ In attesa</option>
+            <option ${p.stato==='confermata'?'selected':''} value="confermata">✅ Confermata</option>
+            <option ${p.stato==='annullata'?'selected':''} value="annullata">❌ Annullata</option>
+          </select>
+        </td>
+      </tr>`).join('');
+}
+
+async function cambiaStato(id, stato) {
+  await fetch(`/api/prenotazioni/${id}/stato`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({stato})
+  });
+  await carica();
+}
+
+document.getElementById('cerca').addEventListener('input', aggiorna);
+document.getElementById('filtro-stato').addEventListener('change', aggiorna);
+document.getElementById('filtro-data').addEventListener('change', aggiorna);
+
+carica();
+setInterval(carica, 30000);
+</script>
+</body>
+</html>

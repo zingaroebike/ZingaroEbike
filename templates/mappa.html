@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mappa Percorsi – ZingaroEbike</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins',sans-serif; background:#f0f2f5; }
+
+  nav {
+    position:fixed; top:0; width:100%; z-index:2000;
+    background:rgba(26,26,46,0.97); backdrop-filter:blur(10px);
+    padding:14px 40px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .logo { color:white; font-size:1.4rem; font-weight:800; text-decoration:none; }
+  .logo span { color:#f4a81d; }
+  .nav-links a { color:white; text-decoration:none; margin-left:20px; font-size:.9rem; }
+  .nav-links a:hover { color:#f4a81d; }
+
+  .page-header {
+    margin-top:58px; background:linear-gradient(135deg,#1a1a2e,#2d7d46);
+    padding:35px 40px; color:white;
+  }
+  .page-header h1 { font-size:2rem; font-weight:800; }
+  .page-header h1 span { color:#f4a81d; }
+  .page-header p { opacity:.8; margin-top:5px; }
+
+  .layout { display:grid; grid-template-columns:320px 1fr; height:calc(100vh - 130px); }
+
+  /* SIDEBAR */
+  .sidebar { overflow-y:auto; background:white; border-right:1px solid #e0e0e0; }
+  .percorso-btn {
+    padding:18px 20px; border:none; width:100%; text-align:left;
+    background:white; cursor:pointer; border-bottom:1px solid #f0f0f0;
+    display:flex; align-items:center; gap:12px; transition:background .2s;
+    font-family:'Poppins',sans-serif;
+  }
+  .percorso-btn:hover { background:#f8f9fa; }
+  .percorso-btn.active { background:#e8f5e9; border-left:4px solid #2d7d46; }
+  .percorso-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .percorso-info h3 { font-size:.95rem; font-weight:700; color:#1a1a2e; }
+  .percorso-info p { font-size:.8rem; color:#999; margin-top:2px; }
+  .percorso-meta-small { display:flex; gap:10px; margin-top:4px; flex-wrap:wrap; }
+  .percorso-meta-small span { font-size:.75rem; color:#666; }
+  .btn-download {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#f4a81d; color:#1a1a2e; border:none; border-radius:8px;
+    padding:6px 12px; font-size:.78rem; font-weight:700; cursor:pointer;
+    margin-top:8px; text-decoration:none; font-family:'Poppins',sans-serif;
+    transition: background .2s;
+  }
+  .btn-download:hover { background:#e09010; }
+  .offline-banner {
+    background:#2d7d46; color:white; text-align:center;
+    padding:10px; font-size:.85rem; font-weight:600;
+    display:none;
+  }
+
+  /* SOS */
+  .sos-btn {
+    position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+    z-index:1000; background:#e74c3c; color:white;
+    border:none; border-radius:50px; padding:16px 35px;
+    font-family:'Poppins',sans-serif; font-weight:800; font-size:1.1rem;
+    cursor:pointer; box-shadow:0 4px 20px rgba(231,76,60,.5);
+    display:flex; align-items:center; gap:10px;
+    animation: pulse-sos 2s infinite;
+  }
+  @keyframes pulse-sos {
+    0%,100% { box-shadow:0 4px 20px rgba(231,76,60,.5); }
+    50% { box-shadow:0 4px 35px rgba(231,76,60,.9); }
+  }
+  .sos-btn:hover { background:#c0392b; transform:translateX(-50%) scale(1.05); }
+
+  /* MODALE SOS */
+  .sos-modal {
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,.7); align-items:center; justify-content:center;
+  }
+  .sos-modal.open { display:flex; }
+  .sos-box {
+    background:white; border-radius:20px; padding:35px;
+    max-width:420px; width:90%; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .sos-box h2 { color:#e74c3c; font-size:1.8rem; font-weight:800; margin-bottom:5px; }
+  .sos-box p { color:#666; margin-bottom:20px; font-size:.95rem; }
+  .problema-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+  .problema-btn {
+    padding:12px 8px; border:2px solid #e0e0e0; border-radius:12px;
+    background:white; cursor:pointer; font-family:'Poppins',sans-serif;
+    font-size:.85rem; font-weight:600; transition:all .2s; color:#333;
+  }
+  .problema-btn:hover, .problema-btn.selected { border-color:#e74c3c; background:#fff5f5; color:#e74c3c; }
+  .problema-btn span { display:block; font-size:1.5rem; margin-bottom:4px; }
+  .sos-send {
+    width:100%; background:#e74c3c; color:white; border:none;
+    border-radius:12px; padding:14px; font-size:1rem; font-weight:700;
+    font-family:'Poppins',sans-serif; cursor:pointer; margin-top:5px;
+    transition:background .2s;
+  }
+  .sos-send:hover { background:#c0392b; }
+  .sos-close {
+    background:none; border:none; color:#999; font-size:.9rem;
+    cursor:pointer; margin-top:12px; font-family:'Poppins',sans-serif;
+  }
+  .pos-status { font-size:.82rem; color:#2d7d46; margin-bottom:15px; font-weight:600; }
+
+  .sidebar-section { padding:15px 20px 5px; font-size:.75rem; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; }
+
+  .poi-item {
+    padding:12px 20px; display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid #f5f5f5; cursor:pointer; transition:background .2s;
+  }
+  .poi-item:hover { background:#f8f9fa; }
+  .poi-icon-box { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+  .poi-item h4 { font-size:.88rem; font-weight:600; }
+  .poi-item p { font-size:.78rem; color:#999; }
+
+  /* MAPPA */
+  #map { width:100%; height:100%; z-index:1; }
+
+  /* INFO BOX sulla mappa */
+  .info-panel {
+    position:absolute; bottom:20px; right:20px; z-index:1000;
+    background:white; border-radius:15px; padding:18px 22px;
+    box-shadow:0 5px 30px rgba(0,0,0,.15); max-width:280px;
+    display:none;
+  }
+  .info-panel h3 { font-size:1rem; font-weight:700; margin-bottom:6px; }
+  .info-panel p { font-size:.85rem; color:#666; margin-bottom:10px; }
+  .info-panel .tags { display:flex; gap:6px; flex-wrap:wrap; }
+  .tag { background:#e8f5e9; color:#2d7d46; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
+  .btn-prenota-map {
+    display:block; background:#2d7d46; color:white; text-align:center;
+    padding:10px; border-radius:10px; text-decoration:none; font-weight:600;
+    font-size:.85rem; margin-top:12px;
+  }
+
+  .legenda {
+    position:absolute; top:80px; right:20px; z-index:1000;
+    background:white; border-radius:12px; padding:14px 18px;
+    box-shadow:0 3px 15px rgba(0,0,0,.1); min-width:180px;
+  }
+  .legenda h4 { font-size:.8rem; font-weight:700; color:#999; text-transform:uppercase; margin-bottom:10px; }
+  .leg-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:.82rem; }
+  .leg-line { width:30px; height:4px; border-radius:2px; }
+
+  @media(max-width:768px) {
+    .layout { grid-template-columns:1fr; grid-template-rows:auto 1fr; }
+    .sidebar { max-height:250px; overflow-y:auto; border-right:none; border-bottom:1px solid #e0e0e0; }
+    .legenda { top:auto; bottom:80px; right:10px; }
+    nav { padding:14px 20px; }
+    .page-header { padding:25px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+    <img src="/static/img/logo.svg" alt="Logo" style="height:36px;width:36px;">
+    <span style="color:white;font-weight:800;font-size:1.3rem;">Zingaro<span style="color:#f4a81d">Ebike</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/#percorsi">Percorsi</a>
+    <a href="/#prenota">Prenota</a>
+    <a href="/mappa" style="color:#f4a81d; font-weight:600;">🗺️ Mappa</a>
+  </div>
+</nav>
+
+<div class="offline-banner" id="offline-banner">
+  ✅ Mappa salvata per uso offline! Apri questa pagina anche senza internet.
+</div>
+<div class="page-header">
+  <h1>🗺️ Mappa <span>Percorsi E-Bike</span></h1>
+  <p>Esplora tutti i percorsi e i punti di interesse da Castellammare del Golfo alla Riserva dello Zingaro</p>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Percorsi</div>
+
+    <button class="percorso-btn active" onclick="mostraPercorso(0)">
+      <div class="percorso-dot" style="background:#0077b6"></div>
+      <div class="percorso-info">
+        <h3>Lungomare di Castellammare</h3>
+        <div class="percorso-meta-small">
+          <span>🟢 Facile</span><span>📏 8 km</span><span>⏱️ 1h</span>
+        </div>
+        <a class="btn-download" href="/static/gpx/lungomare.gpx" download>⬇️ Scarica GPX</a>
+      </div>
+    </button>
+
+    <button class="percorso-btn" onclick="mostraPercorso(1)">
+      <div class="percorso-dot" style="background:#2d7d46"></div>
+      <div class="percorso-info">
+        <h3>Verso la Riserva dello Zingaro</h3>
+        <div class="percorso-meta-small">
+          <span>🟡 Medio</span><span>📏 22 km</span><span>⏱️ 2.5h</span>
+        </div>
+        <a class="btn-download" href="/static/gpx/zingaro.gpx" download>⬇️ Scarica GPX</a>
+      </div>
+    </button>
+
+    <button class="percorso-btn" onclick="mostraPercorso(2)">
+      <div class="percorso-dot" style="background:#e74c3c"></div>
+      <div class="percorso-info">
+        <h3>Costa Integrale – Scopello e Tonnara</h3>
+        <div class="percorso-meta-small">
+          <span>🔴 Avanzato</span><span>📏 35 km</span><span>⏱️ 4h</span>
+        </div>
+        <a class="btn-download" href="/static/gpx/costa-integrale.gpx" download>⬇️ Scarica GPX</a>
+      </div>
+    </button>
+
+    <button class="percorso-btn" onclick="mostraPercorso(3)">
+      <div class="percorso-dot" style="background:#9b59b6"></div>
+      <div class="percorso-info">
+        <h3>Tempio e Teatro di Segesta</h3>
+        <div class="percorso-meta-small">
+          <span>🟡 Medio</span><span>📏 30 km</span><span>⏱️ 3h</span>
+        </div>
+        <a class="btn-download" href="/static/gpx/segesta.gpx" download>⬇️ Scarica GPX</a>
+      </div>
+    </button>
+
+    <div style="padding:15px 20px; border-bottom:1px solid #f0f0f0;">
+      <button onclick="salvaOffline()" style="width:100%;background:#1a1a2e;color:white;border:none;border-radius:10px;padding:10px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;">
+        📴 Salva mappa offline
+      </button>
+      <p style="font-size:.75rem;color:#999;margin-top:6px;text-align:center;">Usa la mappa anche senza internet</p>
+    </div>
+
+    <div class="sidebar-section">Punti di Interesse</div>
+
+    <div class="poi-item" onclick="zoomPoi(38.0235, 12.8835)">
+      <div class="poi-icon-box" style="background:#e3f2fd">🏠</div>
+      <div><h4>Punto Ritiro ZingaroEbike</h4><p>Castellammare del Golfo</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(37.9396, 12.8363)">
+      <div class="poi-icon-box" style="background:#f3e5f5">🏛️</div>
+      <div><h4>Tempio Dorico di Segesta</h4><p>V sec. a.C. – perfettamente conservato</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(37.9440, 12.8390)">
+      <div class="poi-icon-box" style="background:#ede7f6">🎭</div>
+      <div><h4>Teatro Greco di Segesta</h4><p>Capienza 4.000 spettatori, vista sul golfo</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0300, 12.8750)">
+      <div class="poi-icon-box" style="background:#e8f5e9">🏰</div>
+      <div><h4>Castello Arabo-Normanno</h4><p>Centro storico</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0400, 12.8200)">
+      <div class="poi-icon-box" style="background:#fff8e1">🌊</div>
+      <div><h4>Spiaggia di Guidaloca</h4><p>Baia protetta</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0500, 12.7800)">
+      <div class="poi-icon-box" style="background:#fce4ec">🐟</div>
+      <div><h4>Tonnara di Scopello</h4><p>Monumento storico</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0600, 12.7500)">
+      <div class="poi-icon-box" style="background:#f3e5f5">🌿</div>
+      <div><h4>Ingresso Riserva Zingaro</h4><p>Riserva Naturale</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0700, 12.7200)">
+      <div class="poi-icon-box" style="background:#e8f5e9">🏖️</div>
+      <div><h4>Cala dell'Uzzo</h4><p>Spiaggia nella riserva</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0800, 12.7000)">
+      <div class="poi-icon-box" style="background:#e3f2fd">🏖️</div>
+      <div><h4>Cala Marinella</h4><p>Spiaggia nella riserva</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0350, 12.8600)">
+      <div class="poi-icon-box" style="background:#fff8e1">👁️</div>
+      <div><h4>Belvedere sul Golfo</h4><p>Panorama mozzafiato</p></div>
+    </div>
+    <div class="poi-item" onclick="zoomPoi(38.0450, 12.8100)">
+      <div class="poi-icon-box" style="background:#fce4ec">🍋</div>
+      <div><h4>Agrumeto Panoramico</h4><p>Sosta consigliata</p></div>
+    </div>
+  </div>
+
+  <!-- MAPPA -->
+  <div style="position:relative">
+    <div id="map"></div>
+
+    <!-- BOTTONE SOS -->
+    <button class="sos-btn" onclick="apriSOS()">
+      🆘 SOS – Chiedi Soccorso
+    </button>
+
+    <div class="legenda">
+      <h4>Legenda Percorsi</h4>
+      <div class="leg-item"><div class="leg-line" style="background:#0077b6"></div> Lungomare</div>
+      <div class="leg-item"><div class="leg-line" style="background:#2d7d46"></div> Verso Zingaro</div>
+      <div class="leg-item"><div class="leg-line" style="background:#e74c3c"></div> Costa Integrale</div>
+      <div class="leg-item"><div class="leg-line" style="background:#9b59b6"></div> Segesta</div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+      <h3 id="info-title"></h3>
+      <p id="info-desc"></p>
+      <div class="tags" id="info-tags"></div>
+      <a href="/#prenota" class="btn-prenota-map">🚴 Prenota questo percorso</a>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE SOS -->
+<div class="sos-modal" id="sos-modal">
+  <div class="sos-box">
+    <h2>🆘 SOS</h2>
+    <p>Seleziona il tipo di problema — invieremo la tua posizione GPS al soccorso</p>
+    <div class="pos-status" id="pos-status">📍 Rilevamento posizione in corso...</div>
+    <div class="problema-grid">
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Foratura')"><span>🔧</span>Foratura</button>
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Caduta / Infortunio')"><span>🤕</span>Caduta / Infortunio</button>
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Bici rotta / guasto')"><span>⚙️</span>Bici rotta</button>
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Batteria scarica')"><span>🔋</span>Batteria scarica</button>
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Mi sono perso')"><span>🧭</span>Mi sono perso</button>
+      <button class="problema-btn" onclick="selezionaProblema(this, 'Emergenza medica')"><span>🚑</span>Emergenza medica</button>
+    </div>
+    <button class="sos-send" id="sos-send" onclick="inviaSOS()" disabled>
+      📲 Invia SOS via WhatsApp
+    </button>
+    <br>
+    <button class="sos-close" onclick="chiudiSOS()">Annulla</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// Inizializza mappa centrata su Castellammare del Golfo
+const map = L.map('map', { zoomControl: true }).setView([38.043, 12.83], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 18
+}).addTo(map);
+
+// ============ PERCORSI (coordinate GPS reali) ============
+const percorsi = [
+  {
+    nome: "Lungomare di Castellammare",
+    colore: "#0077b6",
+    difficolta: "Facile",
+    km: "8 km",
+    tempo: "1h",
+    desc: "Percorso pianeggiante lungo il porto e il lungomare fino alle prime insenature. Ideale per famiglie e principianti.",
+    tag: ["Facile", "Panoramico", "Famiglia"],
+    coords: [
+      [38.0235, 12.8835], [38.0250, 12.8800], [38.0280, 12.8750],
+      [38.0300, 12.8700], [38.0320, 12.8650], [38.0340, 12.8600],
+      [38.0360, 12.8560], [38.0380, 12.8520]
+    ]
+  },
+  {
+    nome: "Verso la Riserva dello Zingaro",
+    colore: "#2d7d46",
+    difficolta: "Medio",
+    km: "22 km",
+    tempo: "2.5h",
+    desc: "Da Castellammare lungo la costa verso Scopello e l'ingresso della Riserva dello Zingaro. Paesaggi spettacolari.",
+    tag: ["Medio", "Costa", "Natura", "Riserva"],
+    coords: [
+      [38.0235, 12.8835], [38.0280, 12.8700], [38.0320, 12.8550],
+      [38.0380, 12.8300], [38.0420, 12.8100], [38.0460, 12.7900],
+      [38.0500, 12.7800], [38.0540, 12.7700], [38.0570, 12.7600],
+      [38.0600, 12.7500]
+    ]
+  },
+  {
+    nome: "Costa Integrale – Scopello e Tonnara",
+    colore: "#e74c3c",
+    difficolta: "Avanzato",
+    km: "35 km",
+    tempo: "4h",
+    desc: "Il percorso completo: dalla città fino alla Cala dell'Uzzo nella riserva, passando per la Tonnara di Scopello. Per ciclisti esperti.",
+    tag: ["Avanzato", "Completo", "Tonnara", "Zingaro"],
+    coords: [
+      [38.0235, 12.8835], [38.0280, 12.8700], [38.0320, 12.8550],
+      [38.0380, 12.8300], [38.0420, 12.8100], [38.0460, 12.7900],
+      [38.0500, 12.7800], [38.0540, 12.7700], [38.0570, 12.7600],
+      [38.0600, 12.7500], [38.0640, 12.7350], [38.0680, 12.7200],
+      [38.0720, 12.7100], [38.0760, 12.7000], [38.0800, 12.6900]
+    ]
+  },
+  {
+    nome: "Tempio e Teatro di Segesta",
+    colore: "#9b59b6",
+    difficolta: "Medio",
+    km: "30 km",
+    tempo: "3h",
+    desc: "Dall'Egeo al cuore dell'antica Sicilia: da Castellammare del Golfo si risale verso l'interno attraverso campagne e colline fino al sito archeologico di Segesta, con il magnifico Tempio Dorico del V sec. a.C. e il Teatro Greco con vista sul Golfo.",
+    tag: ["Medio", "Storia", "Archeologia", "Panoramico"],
+    coords: [
+      [38.0235, 12.8835],
+      [38.0150, 12.8900],
+      [38.0050, 12.8950],
+      [37.9900, 12.9000],
+      [37.9750, 12.8900],
+      [37.9600, 12.8750],
+      [37.9500, 12.8600],
+      [37.9450, 12.8500],
+      [37.9420, 12.8430],
+      [37.9396, 12.8363]
+    ]
+  }
+];
+
+let polylines = [];
+
+function mostraPercorso(idx) {
+  // Rimuovi polylines esistenti
+  polylines.forEach(p => map.removeLayer(p));
+  polylines = [];
+
+  // Aggiorna bottoni sidebar
+  document.querySelectorAll('.percorso-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+
+  const p = percorsi[idx];
+
+  // Disegna percorso con ombra + linea principale
+  const shadow = L.polyline(p.coords, { color:'rgba(0,0,0,0.15)', weight:8, lineCap:'round' }).addTo(map);
+  const line = L.polyline(p.coords, {
+    color: p.colore, weight: 5, lineCap:'round',
+    dashArray: null, opacity: 0.9
+  }).addTo(map);
+  polylines.push(shadow, line);
+
+  // Animazione frecce direzionali
+  const arrows = L.polyline(p.coords, {
+    color: p.colore, weight: 3, opacity: 0.5,
+    dashArray: '10, 15'
+  }).addTo(map);
+  polylines.push(arrows);
+
+  // Marcatori inizio e fine
+  const iconStart = L.divIcon({
+    html: `<div style="background:${p.colore};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.3)">🚴</div>`,
+    iconSize:[36,36], iconAnchor:[18,18], className:''
+  });
+  const iconEnd = L.divIcon({
+    html: `<div style="background:${p.colore};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.3)">🏁</div>`,
+    iconSize:[36,36], iconAnchor:[18,18], className:''
+  });
+  const mStart = L.marker(p.coords[0], {icon: iconStart}).addTo(map).bindPopup(`<b>Partenza</b><br>${p.coords[0][0].toFixed(4)}, ${p.coords[0][1].toFixed(4)}`);
+  const mEnd = L.marker(p.coords[p.coords.length-1], {icon: iconEnd}).addTo(map).bindPopup(`<b>Arrivo</b>`);
+  polylines.push(mStart, mEnd);
+
+  // Fit mappa al percorso
+  map.fitBounds(line.getBounds(), {padding:[30,30]});
+
+  // Mostra info panel
+  const panel = document.getElementById('info-panel');
+  document.getElementById('info-title').textContent = p.nome;
+  document.getElementById('info-desc').textContent = p.desc;
+  document.getElementById('info-tags').innerHTML = p.tag.map(t=>`<span class="tag">${t}</span>`).join('');
+  panel.style.display = 'block';
+}
+
+// ============ PUNTI DI INTERESSE ============
+const pois = [
+  { lat:38.0235, lon:12.8835, icon:'🏠', nome:'Punto Ritiro ZingaroEbike', desc:'Il nostro punto di ritiro e-bike. Aperti tutti i giorni 8:00-19:00', color:'#0077b6' },
+  { lat:38.0300, lon:12.8750, icon:'🏰', nome:'Castello Arabo-Normanno', desc:'Storico castello medievale sul promontorio. Vista panoramica sul golfo.', color:'#795548' },
+  { lat:38.0400, lon:12.8200, icon:'🌊', nome:'Spiaggia di Guidaloca', desc:'Baia protetta con acque cristalline. Ottima sosta per un bagno.', color:'#0077b6' },
+  { lat:38.0500, lon:12.7800, icon:'🐟', nome:'Tonnara di Scopello', desc:'Antica tonnara del 1300, uno dei luoghi più fotografati di Sicilia.', color:'#e74c3c' },
+  { lat:38.0600, lon:12.7500, icon:'🌿', nome:'Ingresso Riserva Zingaro', desc:'Ingresso nord della Riserva Naturale dello Zingaro. Biglietteria presente.', color:'#2d7d46' },
+  { lat:38.0700, lon:12.7200, icon:'🏖️', nome:"Cala dell'Uzzo", desc:'La spiaggia più bella della riserva, raggiungibile solo a piedi o in bici.', color:'#2d7d46' },
+  { lat:38.0800, lon:12.7000, icon:'🏖️', nome:'Cala Marinella', desc:'Spiaggia di ciottoli bianchi in posizione isolata e selvaggia.', color:'#0077b6' },
+  { lat:38.0350, lon:12.8600, icon:'👁️', nome:'Belvedere sul Golfo', desc:'Punto panoramico con vista su tutto il Golfo di Castellammare.', color:'#f4a81d' },
+  { lat:38.0450, lon:12.8100, icon:'🍋', nome:'Agrumeto Panoramico', desc:'Sosta consigliata tra limoni e ulivi con vista mare. Prodotti locali.', color:'#f4a81d' },
+  { lat:37.9396, lon:12.8363, icon:'🏛️', nome:'Tempio Dorico di Segesta', desc:'Uno dei templi greci meglio conservati al mondo. Costruito nel V sec. a.C., ancora privo di tetto. Spettacolare immerso nella natura.', color:'#9b59b6' },
+  { lat:37.9440, lon:12.8390, icon:'🎭', nome:'Teatro Greco di Segesta', desc:'Teatro ellenistico del III sec. a.C. con capienza di 4.000 spettatori. Vista straordinaria sul Golfo di Castellammare.', color:'#9b59b6' },
+  { lat:37.9480, lon:12.8340, icon:'🅿️', nome:'Area Parcheggio Segesta', desc:'Parcheggio bici e bici-taxi per salire al Teatro. Punto di sosta con bar.', color:'#795548' },
+];
+
+pois.forEach(poi => {
+  const icon = L.divIcon({
+    html: `<div style="background:white;border:3px solid ${poi.color};width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 3px 10px rgba(0,0,0,.2);cursor:pointer">${poi.icon}</div>`,
+    iconSize:[38,38], iconAnchor:[19,19], className:''
+  });
+  L.marker([poi.lat, poi.lon], {icon})
+    .addTo(map)
+    .bindPopup(`
+      <div style="font-family:Poppins,sans-serif;min-width:180px">
+        <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px">${poi.icon} ${poi.nome}</h3>
+        <p style="font-size:.82rem;color:#666">${poi.desc}</p>
+      </div>
+    `, {maxWidth:220});
+});
+
+// Mostra percorso 0 di default
+mostraPercorso(0);
+
+function zoomPoi(lat, lon) {
+  map.setView([lat, lon], 16);
+}
+
+// ============ SOS ============
+const SOS_NUMERO = '393290694700'; // Cambia con il numero definitivo
+let posizione = null;
+let problemaSelezionato = null;
+
+function apriSOS() {
+  document.getElementById('sos-modal').classList.add('open');
+  problemaSelezionato = null;
+  document.querySelectorAll('.problema-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('sos-send').disabled = true;
+  document.getElementById('pos-status').textContent = '📍 Rilevamento posizione GPS...';
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      posizione = pos.coords;
+      const lat = posizione.latitude.toFixed(5);
+      const lon = posizione.longitude.toFixed(5);
+      document.getElementById('pos-status').textContent = `✅ Posizione rilevata: ${lat}, ${lon}`;
+      aggiornaBottoneSOS();
+    },
+    err => {
+      document.getElementById('pos-status').textContent = '⚠️ GPS non disponibile — verrà inviato senza coordinate';
+      posizione = null;
+      aggiornaBottoneSOS();
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+function selezionaProblema(btn, tipo) {
+  document.querySelectorAll('.problema-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  problemaSelezionato = tipo;
+  aggiornaBottoneSOS();
+}
+
+function aggiornaBottoneSOS() {
+  document.getElementById('sos-send').disabled = !problemaSelezionato;
+}
+
+function inviaSOS() {
+  if (!problemaSelezionato) return;
+  let msg = `🆘 *SOS ZingaroEbike*\n\n`;
+  msg += `🔴 *Problema:* ${problemaSelezionato}\n`;
+  if (posizione) {
+    const lat = posizione.latitude.toFixed(5);
+    const lon = posizione.longitude.toFixed(5);
+    msg += `📍 *Posizione GPS:*\nhttps://maps.google.com/?q=${lat},${lon}\n`;
+    msg += `_(${lat}, ${lon})_\n`;
+  } else {
+    msg += `📍 *Posizione:* Non rilevata via GPS\n`;
+  }
+  msg += `\n⏰ ${new Date().toLocaleTimeString('it-IT')} – ${new Date().toLocaleDateString('it-IT')}`;
+
+  const url = `https://wa.me/${SOS_NUMERO}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  chiudiSOS();
+}
+
+function chiudiSOS() {
+  document.getElementById('sos-modal').classList.remove('open');
+}
+
+// Service Worker per offline
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/sw.js')
+    .then(() => console.log('SW registrato'))
+    .catch(e => console.log('SW errore', e));
+}
+
+function salvaOffline() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(() => {
+      // Forza cache di tutti i tile visibili
+      const bounds = map.getBounds();
+      document.getElementById('offline-banner').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('offline-banner').style.display = 'none';
+      }, 4000);
+    });
+  } else {
+    alert('Il tuo browser non supporta la modalità offline. Usa Chrome o Safari aggiornato.');
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="ZingaroEbike" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Lungomare di Castellammare</name>
+    <desc>Percorso facile lungo il porto e il lungomare. 8 km, 1h, +50m</desc>
+    <author><name>ZingaroEbike – Terraferma Cooperativa Sociale</name></author>
+  </metadata>
+  <trk>
+    <name>Lungomare di Castellammare</name>
+    <type>cycling</type>
+    <trkseg>
+      <trkpt lat="38.0235" lon="12.8835"><ele>5</ele></trkpt>
+      <trkpt lat="38.0250" lon="12.8800"><ele>5</ele></trkpt>
+      <trkpt lat="38.0280" lon="12.8750"><ele>8</ele></trkpt>
+      <trkpt lat="38.0300" lon="12.8700"><ele>10</ele></trkpt>
+      <trkpt lat="38.0320" lon="12.8650"><ele>12</ele></trkpt>
+      <trkpt lat="38.0340" lon="12.8600"><ele>15</ele></trkpt>
+      <trkpt lat="38.0360" lon="12.8560"><ele>18</ele></trkpt>
+      <trkpt lat="38.0380" lon="12.8520"><ele>20</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

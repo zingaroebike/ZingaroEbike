@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="ZingaroEbike" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Verso la Riserva dello Zingaro</name>
+    <desc>Da Castellammare lungo la costa verso Scopello e la Riserva dello Zingaro. 22 km, 2.5h, +280m</desc>
+    <author><name>ZingaroEbike – Terraferma Cooperativa Sociale</name></author>
+  </metadata>
+  <trk>
+    <name>Verso la Riserva dello Zingaro</name>
+    <type>cycling</type>
+    <trkseg>
+      <trkpt lat="38.0235" lon="12.8835"><ele>5</ele></trkpt>
+      <trkpt lat="38.0280" lon="12.8700"><ele>15</ele></trkpt>
+      <trkpt lat="38.0320" lon="12.8550"><ele>30</ele></trkpt>
+      <trkpt lat="38.0380" lon="12.8300"><ele>50</ele></trkpt>
+      <trkpt lat="38.0420" lon="12.8100"><ele>80</ele></trkpt>
+      <trkpt lat="38.0460" lon="12.7900"><ele>120</ele></trkpt>
+      <trkpt lat="38.0500" lon="12.7800"><ele>150</ele></trkpt>
+      <trkpt lat="38.0540" lon="12.7700"><ele>200</ele></trkpt>
+      <trkpt lat="38.0570" lon="12.7600"><ele>240</ele></trkpt>
+      <trkpt lat="38.0600" lon="12.7500"><ele>280</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
