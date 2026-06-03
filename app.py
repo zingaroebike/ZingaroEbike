@@ -25,8 +25,8 @@ PREZZI = {
 
 # ── TELEGRAM ─────────────────────────────────────────────────────────────
 # Inserisci qui i tuoi valori dopo aver creato il bot (vedi istruzioni)
-TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', 'INSERISCI_IL_TOKEN_DEL_BOT')
-TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', 'INSERISCI_IL_TUO_CHAT_ID')
+TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '8880129413:AAGEK1j5vM02-ierwqOggjJFHrLUYwkFk-I')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '7776591247')
 
 def invia_telegram(testo):
     """Invia un messaggio Telegram al proprietario."""
