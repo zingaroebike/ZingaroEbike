@@ -8,8 +8,8 @@ import urllib.request
 import json as _json
 
 # Chiavi Stripe — da sostituire con le tue dopo la registrazione su stripe.com
-STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', 'pk_test_INSERISCI_LA_TUA_CHIAVE_PUBBLICA')
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_INSERISCI_LA_TUA_CHIAVE_SEGRETA')
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', 'pk_test_51TeMnBI3mdOKJnyDy9thYKOWbv11SN4vsfs5G0WklQ5opymeUBxS1RmXfn9HyBVTJ80Fbv3fPmyWO5xvyFPZxMYx000FQYRaBS')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_51TeMnBI3mdOKJnyDrk18NhqBddNA48WVXzmHxdOh4FYuJ7cfaitGeRQC6obILJS6NQBLi3uH7TwBIUzy82RjIx6800vMmKETjc')
 stripe.api_key = STRIPE_SECRET_KEY
 
 # Prezzi in centesimi (Stripe vuole i centesimi)
