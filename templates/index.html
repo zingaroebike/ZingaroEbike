@@ -85,6 +85,8 @@
   .section-title { text-align: center; margin-bottom: 60px; }
   .section-title h2 { font-size: 2.5rem; font-weight: 800; color: var(--scuro); }
   .section-title h2 span { color: var(--verde); }
+  #prenota .section-title h2 span { color: var(--oro); }
+  #galleria .section-title h2 span { color: var(--oro); }
   .section-title p { color: #666; margin-top: 10px; font-size: 1.1rem; }
 
   /* BICI */
@@ -106,30 +108,90 @@
   .tag { background: #e8f5e9; color: var(--verde); padding: 4px 12px; border-radius: 15px; font-size: .8rem; }
 
   /* PERCORSI */
-  #percorsi { background: white; }
-  .percorsi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+  #percorsi { background: #f8f9fa; }
+  .percorsi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(490px, 1fr)); gap: 35px; max-width: 1100px; margin: 0 auto; }
+  @media (max-width: 1050px) { .percorsi-grid { grid-template-columns: 1fr; } }
+
   .percorso-card {
-    border-radius: 20px; overflow: hidden; position: relative;
-    height: 380px; cursor: pointer; box-shadow: 0 5px 30px rgba(0,0,0,.15);
-    transition: transform .3s;
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,.12);
+    background: white;
+    transition: transform .3s, box-shadow .3s;
+    display: flex; flex-direction: column;
   }
-  .percorso-card:hover { transform: scale(1.02); }
-  .percorso-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-  .p1 .percorso-bg { background: linear-gradient(135deg, #0077b6, #00b4d8); }
-  .p2 .percorso-bg { background: linear-gradient(135deg, #2d7d46, #52b788); }
-  .p3 .percorso-bg { background: linear-gradient(135deg, #e76f51, #f4a261); }
-  .percorso-overlay {
+  .percorso-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,0,0,.18); }
+
+  /* Foto + overlay in alto */
+  .percorso-img-wrap {
+    position: relative; height: 220px; overflow: hidden; flex-shrink: 0;
+  }
+  .percorso-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform .4s;
+  }
+  .percorso-card:hover .percorso-img-wrap img { transform: scale(1.06); }
+  .percorso-img-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 50%);
-    display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; color: white;
+    background: linear-gradient(to top, rgba(0,0,0,.65) 0%, rgba(0,0,0,.1) 55%, transparent 100%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 18px 20px;
+    color: white;
   }
-  .difficolta { display: inline-block; padding: 4px 12px; border-radius: 15px; font-size: .8rem; font-weight: 600; margin-bottom: 10px; width: fit-content; }
-  .facile { background: var(--verde-chiaro); }
+  .percorso-img-overlay h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 6px; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+  .percorso-meta { display: flex; gap: 14px; font-size: .82rem; opacity: .95; }
+  .percorso-meta span { display:flex; align-items:center; gap:4px; }
+
+  .difficolta {
+    display: inline-block; padding: 4px 12px; border-radius: 15px;
+    font-size: .75rem; font-weight: 700; margin-bottom: 8px; width: fit-content;
+  }
+  .facile { background: var(--verde-chiaro); color:white; }
   .medio { background: var(--oro); color: var(--scuro); }
-  .difficile { background: #e74c3c; }
-  .percorso-overlay h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
-  .percorso-meta { display: flex; gap: 15px; font-size: .9rem; opacity: .9; }
-  .percorso-icon { font-size: 4rem; text-align: center; padding: 40px 0 20px; opacity: .7; }
+  .difficile { background: #e74c3c; color:white; }
+
+  /* Corpo card */
+  .percorso-body { padding: 22px 24px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+
+  .percorso-desc { font-size: .88rem; color: #555; line-height: 1.7; }
+
+  .percorso-poi { display: flex; flex-wrap: wrap; gap: 7px; }
+  .poi-tag {
+    background: #e8f5e9; color: var(--verde);
+    padding: 4px 11px; border-radius: 20px; font-size: .78rem; font-weight: 600;
+  }
+
+  .percorso-bici-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #f0f7f0; border-radius: 12px; padding: 10px 15px;
+    margin-top: auto;
+  }
+  .percorso-bici-label { font-size: .8rem; color: #555; }
+  .percorso-bici-label strong { color: var(--verde); font-size: .9rem; }
+
+  .percorso-azioni { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 24px 20px; }
+  .btn-gpx {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: white; color: var(--scuro);
+    border: 2px solid #ddd;
+    padding: 8px 16px; border-radius: 20px;
+    font-size: .8rem; font-weight: 600; text-decoration: none;
+    transition: all .25s;
+  }
+  .btn-gpx:hover { border-color: var(--verde); color: var(--verde); }
+  .btn-mappa {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--azzurro); color: white;
+    padding: 8px 16px; border-radius: 20px;
+    font-size: .8rem; font-weight: 700; text-decoration: none;
+    transition: all .25s;
+  }
+  .btn-mappa:hover { background: #005f8e; }
+  .btn-prenota-percorso {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--verde); color: white;
+    padding: 8px 18px; border-radius: 20px;
+    font-size: .8rem; font-weight: 700; text-decoration: none;
+    transition: all .25s; margin-left: auto;
+  }
+  .btn-prenota-percorso:hover { background: var(--verde-chiaro); }
 
   /* GALLERIA */
   #galleria { background: var(--scuro); }
@@ -282,42 +344,62 @@
     <p data-i18n="bici_sottotitolo">Biciclette elettriche di ultima generazione per ogni tipo di avventura</p>
   </div>
   <div class="bici-grid">
+    <!-- CITY -->
     <div class="bici-card">
-      <div class="bici-img"><i class="fas fa-bicycle"></i></div>
+      <div class="bici-img" style="padding:0; overflow:hidden;">
+        <img src="https://images.pexels.com/photos/15021397/pexels-photo-15021397.jpeg?auto=compress&cs=tinysrgb&w=600"
+             alt="E-Bike City"
+             style="width:100%;height:100%;object-fit:cover;object-position:center;">
+      </div>
       <div class="bici-info">
         <h3 data-i18n="bici1_nome">E-Bike City</h3>
-        <p data-i18n="bici1_desc">Perfetta per il lungomare e le strade del centro storico. Comoda e leggera.</p>
-        <div class="prezzo"><span data-i18n="bici1_prezzo">€25</span> <span data-i18n="bici1_periodo">/ mezza giornata</span></div>
+        <p data-i18n="bici1_desc">Perfetta per il lungomare e le strade del centro storico. Comoda, stabile, con fari LED e cambio automatico.</p>
+        <div class="prezzo">€25 <span>/ mezza giornata</span></div>
         <div class="bici-features">
           <span class="tag">250W</span>
-          <span class="tag" data-i18n="tag_autonomia1">Autonomia 60km</span>
-          <span class="tag" data-i18n="tag_vel1">7 velocità</span>
+          <span class="tag">Fino a 90km</span>
+          <span class="tag">7 velocità</span>
+          <span class="tag">Freni idraulici</span>
         </div>
       </div>
     </div>
+
+    <!-- MTB -->
     <div class="bici-card">
-      <div class="bici-img" style="background: linear-gradient(135deg,#0077b6,#00b4d8)"><i class="fas fa-mountain-sun"></i></div>
+      <div class="bici-img" style="padding:0; overflow:hidden;">
+        <img src="https://images.pexels.com/photos/19411380/pexels-photo-19411380.jpeg?auto=compress&cs=tinysrgb&w=600"
+             alt="E-MTB Trail"
+             style="width:100%;height:100%;object-fit:cover;object-position:center;">
+      </div>
       <div class="bici-info">
         <h3 data-i18n="bici2_nome">E-MTB Trail</h3>
-        <p data-i18n="bici2_desc">Per i percorsi più impegnativi verso la Riserva. Sospensioni anteriori e posteriori.</p>
-        <div class="prezzo"><span data-i18n="bici2_prezzo">€40</span> <span data-i18n="bici2_periodo">/ mezza giornata</span></div>
+        <p data-i18n="bici2_desc">Per i percorsi più impegnativi verso la Riserva e l'entroterra. Sospensioni anteriori e motore potente.</p>
+        <div class="prezzo">€40 <span>/ mezza giornata</span></div>
         <div class="bici-features">
-          <span class="tag">500W</span>
-          <span class="tag" data-i18n="tag_autonomia2">Autonomia 80km</span>
-          <span class="tag" data-i18n="tag_vel2">12 velocità</span>
+          <span class="tag">250W – 70 Nm</span>
+          <span class="tag">Fino a 80km</span>
+          <span class="tag">Forcella 120mm</span>
+          <span class="tag">Freni idraulici</span>
         </div>
       </div>
     </div>
+
+    <!-- GRUPPO -->
     <div class="bici-card">
-      <div class="bici-img" style="background: linear-gradient(135deg,#f4a81d,#e76f51)"><i class="fas fa-users"></i></div>
+      <div class="bici-img" style="padding:0; overflow:hidden;">
+        <img src="https://images.pexels.com/photos/1534770/pexels-photo-1534770.jpeg?auto=compress&cs=tinysrgb&w=600"
+             alt="Pacchetto Gruppo e-bike"
+             style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+      </div>
       <div class="bici-info">
         <h3 data-i18n="bici3_nome">Pacchetto Gruppo</h3>
-        <p data-i18n="bici3_desc">4 o più bici per famiglie e gruppi. Include guida GPS e kit pronto soccorso.</p>
-        <div class="prezzo"><span data-i18n="bici3_prezzo">€80</span> <span data-i18n="bici3_periodo">/ gruppo (4 bici)</span></div>
+        <p data-i18n="bici3_desc">4 e-bike per famiglie e gruppi. Mix city e MTB in base alle esigenze. Include caschi, lucchetti e kit pronto soccorso.</p>
+        <div class="prezzo">€80 <span>/ gruppo (4 bici)</span></div>
         <div class="bici-features">
-          <span class="tag" data-i18n="tag_gps">GPS incluso</span>
-          <span class="tag" data-i18n="tag_casco">Casco incluso</span>
-          <span class="tag" data-i18n="tag_guida">Guida opzionale</span>
+          <span class="tag">4 e-bike incluse</span>
+          <span class="tag">Caschi inclusi</span>
+          <span class="tag">Lucchetti inclusi</span>
+          <span class="tag">GPS opzionale</span>
         </div>
       </div>
     </div>
@@ -331,52 +413,187 @@
     <p data-i18n="percorsi_sottotitolo">Itinerari selezionati lungo la costa più bella della Sicilia</p>
   </div>
   <div class="percorsi-grid">
-    <div class="percorso-card p1">
-      <div class="percorso-bg"></div>
-      <div class="percorso-icon"><i class="fas fa-water"></i></div>
-      <div class="percorso-overlay">
-        <span class="difficolta facile" data-i18n="p1_diff">⭐ Facile</span>
-        <h3 data-i18n="p1_nome">Lungomare di Castellammare</h3>
-        <div class="percorso-meta">
-          <span><i class="fas fa-route"></i> 8 km</span>
-          <span><i class="fas fa-clock"></i> 1h</span>
-          <span><i class="fas fa-mountain"></i> +50m</span>
+
+    <!-- ① LUNGOMARE -->
+    <div class="percorso-card">
+      <div class="percorso-img-wrap">
+        <img src="https://images.pexels.com/photos/35817977/pexels-photo-35817977/free-photo-of-veduta-aerea-del-porto-di-castellammare-del-golfo.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Lungomare di Castellammare del Golfo" loading="lazy">
+        <div class="percorso-img-overlay">
+          <span class="difficolta facile" data-i18n="p1_diff">⭐ Facile</span>
+          <h3 data-i18n="p1_nome">Lungomare di Castellammare</h3>
+          <div class="percorso-meta">
+            <span><i class="fas fa-route"></i> 8 km</span>
+            <span><i class="fas fa-clock"></i> ~1h</span>
+            <span><i class="fas fa-mountain"></i> +50m</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="percorso-card p2">
-      <div class="percorso-bg"></div>
-      <div class="percorso-icon"><i class="fas fa-tree"></i></div>
-      <div class="percorso-overlay">
-        <span class="difficolta medio" data-i18n="p2_diff">⭐⭐ Medio</span>
-        <h3 data-i18n="p2_nome">Verso la Riserva dello Zingaro</h3>
-        <div class="percorso-meta">
-          <span><i class="fas fa-route"></i> 22 km</span>
-          <span><i class="fas fa-clock"></i> 2.5h</span>
-          <span><i class="fas fa-mountain"></i> +280m</span>
+      <div class="percorso-body">
+        <p class="percorso-desc">Il percorso più rilassante: una passeggiata in e-bike lungo il mare tra il porto storico, la spiaggia di Playa e il castello medievale. Ideale per famiglie e per chi vuole godersi la vista del golfo senza fatica.</p>
+        <div class="percorso-poi">
+          <span class="poi-tag">🏰 Castello Arabo-Normanno</span>
+          <span class="poi-tag">⛵ Porto storico</span>
+          <span class="poi-tag">🏖️ Spiaggia di Playa</span>
+          <span class="poi-tag">🍦 Gelato sul lungomare</span>
+        </div>
+        <div class="percorso-bici-row">
+          <div class="percorso-bici-label">Bici consigliata: <strong>🚲 E-Bike City</strong></div>
+          <span style="font-size:.75rem;color:#888;">da €25 / mezza giornata</span>
         </div>
       </div>
-    </div>
-    <div class="percorso-card p3">
-      <div class="percorso-bg"></div>
-      <div class="percorso-icon"><i class="fas fa-anchor"></i></div>
-      <div class="percorso-overlay">
-        <span class="difficolta difficile" data-i18n="p3_diff">⭐⭐⭐ Avanzato</span>
-        <h3 data-i18n="p3_nome">Costa Integrale – Scopello e Tonnara</h3>
-        <div class="percorso-meta">
-          <span><i class="fas fa-route"></i> 35 km</span>
-          <span><i class="fas fa-clock"></i> 4h</span>
-          <span><i class="fas fa-mountain"></i> +450m</span>
-        </div>
+      <div class="percorso-azioni">
+        <a href="/static/gpx/lungomare.gpx" download class="btn-gpx">⬇️ GPX</a>
+        <a href="/mappa?percorso=0" class="btn-mappa">🗺️ Mappa</a>
+        <a href="#prenota" class="btn-prenota-percorso" onclick="preselezionaBici('city')">🚴 Prenota</a>
       </div>
     </div>
+
+    <!-- ② RISERVA DELLO ZINGARO -->
+    <div class="percorso-card">
+      <div class="percorso-img-wrap">
+        <img src="https://images.pexels.com/photos/34620473/pexels-photo-34620473.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Riserva dello Zingaro" loading="lazy">
+        <div class="percorso-img-overlay">
+          <span class="difficolta medio" data-i18n="p2_diff">⭐⭐ Medio</span>
+          <h3 data-i18n="p2_nome">Verso la Riserva dello Zingaro</h3>
+          <div class="percorso-meta">
+            <span><i class="fas fa-route"></i> 22 km</span>
+            <span><i class="fas fa-clock"></i> ~2.5h</span>
+            <span><i class="fas fa-mountain"></i> +280m</span>
+          </div>
+        </div>
+      </div>
+      <div class="percorso-body">
+        <p class="percorso-desc">Il percorso simbolo di ZingaroEbike: da Castellammare si percorre la costa verso Scopello, con vista sulle faraglioni e sulla baia, fino all'ingresso della Riserva Naturale dello Zingaro, una delle più belle d'Italia.</p>
+        <div class="percorso-poi">
+          <span class="poi-tag">🌿 Riserva dello Zingaro</span>
+          <span class="poi-tag">🏛️ Tonnara di Scopello</span>
+          <span class="poi-tag">🪨 Faraglioni di Scopello</span>
+          <span class="poi-tag">🏊 Cala Marinella</span>
+        </div>
+        <div class="percorso-bici-row">
+          <div class="percorso-bici-label">Bici consigliata: <strong>🚵 E-MTB Trail</strong></div>
+          <span style="font-size:.75rem;color:#888;">da €40 / mezza giornata</span>
+        </div>
+      </div>
+      <div class="percorso-azioni">
+        <a href="/static/gpx/zingaro.gpx" download class="btn-gpx">⬇️ GPX</a>
+        <a href="/mappa?percorso=1" class="btn-mappa">🗺️ Mappa</a>
+        <a href="#prenota" class="btn-prenota-percorso" onclick="preselezionaBici('mtb')">🚴 Prenota</a>
+      </div>
+    </div>
+
+    <!-- ③ COSTA INTEGRALE -->
+    <div class="percorso-card">
+      <div class="percorso-img-wrap">
+        <img src="https://images.pexels.com/photos/28955953/pexels-photo-28955953.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Costa Sicilia - Scopello e Tonnara" loading="lazy">
+        <div class="percorso-img-overlay">
+          <span class="difficolta difficile" data-i18n="p3_diff">⭐⭐⭐ Avanzato</span>
+          <h3 data-i18n="p3_nome">Costa Integrale – Scopello e Tonnara</h3>
+          <div class="percorso-meta">
+            <span><i class="fas fa-route"></i> 35 km</span>
+            <span><i class="fas fa-clock"></i> ~4h</span>
+            <span><i class="fas fa-mountain"></i> +450m</span>
+          </div>
+        </div>
+      </div>
+      <div class="percorso-body">
+        <p class="percorso-desc">Il grande classico per i ciclisti più allenati: si parte da Castellammare, si attraversa Scopello con la sua storica tonnara, si entra nella Riserva e si prosegue fino a San Vito Lo Capo lungo la costa più selvaggia della Sicilia.</p>
+        <div class="percorso-poi">
+          <span class="poi-tag">🏛️ Tonnara di Scopello</span>
+          <span class="poi-tag">🌿 Riserva dello Zingaro</span>
+          <span class="poi-tag">🏖️ Cala dell'Uzzo</span>
+          <span class="poi-tag">🐟 San Vito Lo Capo</span>
+          <span class="poi-tag">🌅 Tramonto sul mare</span>
+        </div>
+        <div class="percorso-bici-row">
+          <div class="percorso-bici-label">Bici consigliata: <strong>🚵 E-MTB Trail</strong></div>
+          <span style="font-size:.75rem;color:#888;">da €40 / giornata intera</span>
+        </div>
+      </div>
+      <div class="percorso-azioni">
+        <a href="/static/gpx/costa-integrale.gpx" download class="btn-gpx">⬇️ GPX</a>
+        <a href="/mappa?percorso=2" class="btn-mappa">🗺️ Mappa</a>
+        <a href="#prenota" class="btn-prenota-percorso" onclick="preselezionaBici('mtb')">🚴 Prenota</a>
+      </div>
+    </div>
+
+    <!-- ④ SEGESTA -->
+    <div class="percorso-card">
+      <div class="percorso-img-wrap">
+        <img src="https://images.pexels.com/photos/13498340/pexels-photo-13498340.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Tempio di Segesta" loading="lazy">
+        <div class="percorso-img-overlay">
+          <span class="difficolta medio">⭐⭐ Medio</span>
+          <h3 data-i18n="p4_nome">Tempio e Teatro di Segesta</h3>
+          <div class="percorso-meta">
+            <span><i class="fas fa-route"></i> 30 km</span>
+            <span><i class="fas fa-clock"></i> ~3h</span>
+            <span><i class="fas fa-mountain"></i> +380m</span>
+          </div>
+        </div>
+      </div>
+      <div class="percorso-body">
+        <p class="percorso-desc">Un tuffo nella storia della Sicilia antica: dalla costa si risale verso l'entroterra collinare fino al magnifico sito archeologico di Segesta, con il Tempio greco del V sec. a.C. e il Teatro ellenistico con vista panoramica sul golfo.</p>
+        <div class="percorso-poi">
+          <span class="poi-tag">🏛️ Tempio greco V sec. a.C.</span>
+          <span class="poi-tag">🎭 Teatro ellenistico</span>
+          <span class="poi-tag">🌾 Campagna siciliana</span>
+          <span class="poi-tag">🔭 Panorama sul golfo</span>
+        </div>
+        <div class="percorso-bici-row">
+          <div class="percorso-bici-label">Bici consigliata: <strong>🚵 E-MTB Trail</strong></div>
+          <span style="font-size:.75rem;color:#888;">da €40 / giornata intera</span>
+        </div>
+      </div>
+      <div class="percorso-azioni">
+        <a href="/static/gpx/segesta.gpx" download class="btn-gpx">⬇️ GPX</a>
+        <a href="/mappa?percorso=3" class="btn-mappa">🗺️ Mappa</a>
+        <a href="#prenota" class="btn-prenota-percorso" onclick="preselezionaBici('mtb')">🚴 Prenota</a>
+      </div>
+    </div>
+
+    <!-- ⑤ GREENWAY EX FERROVIA -->
+    <div class="percorso-card">
+      <div class="percorso-img-wrap">
+        <img src="https://images.pexels.com/photos/1575937/pexels-photo-1575937.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Greenway ex ferrovia Sicilia" loading="lazy">
+        <div class="percorso-img-overlay">
+          <span class="difficolta facile">⭐ Facile</span>
+          <h3>Greenway degli Elimi</h3>
+          <div class="percorso-meta">
+            <span><i class="fas fa-route"></i> 18 km</span>
+            <span><i class="fas fa-clock"></i> ~1.5h</span>
+            <span><i class="fas fa-mountain"></i> +30m</span>
+          </div>
+        </div>
+      </div>
+      <div class="percorso-body">
+        <p class="percorso-desc">La Greenway degli Elimi percorre l'ex tracciato ferroviario Trapani–Palermo trasformato in pista ciclabile. Un itinerario quasi pianeggiante nella terra degli antichi Elimi, tra viadotti storici, ulivi, vigneti e panorami sul Golfo di Castellammare — perfetto per famiglie e per chi vuole pedalare senza fatica ammirando il paesaggio.</p>
+        <div class="percorso-poi">
+          <span class="poi-tag">🚂 Ex tracciato ferroviario</span>
+          <span class="poi-tag">🏛️ Terra degli Elimi</span>
+          <span class="poi-tag">🌾 Ulivi e vigneti DOC</span>
+          <span class="poi-tag">🌊 Vista sul Golfo</span>
+          <span class="poi-tag">🏙️ Alcamo e Calatafimi</span>
+          <span class="poi-tag">👨‍👩‍👧 Adatto alle famiglie</span>
+        </div>
+        <div class="percorso-bici-row">
+          <div class="percorso-bici-label">Bici consigliata: <strong>🚲 E-Bike City</strong></div>
+          <span style="font-size:.75rem;color:#888;">da €25 / mezza giornata</span>
+        </div>
+      </div>
+      <div class="percorso-azioni">
+        <a href="/static/gpx/greenway.gpx" download class="btn-gpx">⬇️ GPX</a>
+        <a href="/mappa?percorso=4" class="btn-mappa">🗺️ Mappa</a>
+        <a href="#prenota" class="btn-prenota-percorso" onclick="preselezionaBici('city')">🚴 Prenota</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <!-- GALLERIA -->
 <section id="galleria">
   <div class="section-title">
-    <h2 data-i18n-html="galleria_titolo">La nostra <span style="color:var(--oro)">Galleria</span></h2>
+    <h2 data-i18n-html="galleria_titolo">La nostra <span>Galleria</span></h2>
     <p data-i18n="galleria_sottotitolo">Paesaggi, percorsi e momenti indimenticabili</p>
   </div>
   <div class="gallery-grid">
@@ -444,7 +661,7 @@
 <!-- PRENOTAZIONE -->
 <section id="prenota">
   <div class="section-title">
-    <h2 data-i18n-html="prenota_titolo">Prenota la tua <span style="color:var(--oro)">E-Bike</span></h2>
+    <h2 data-i18n-html="prenota_titolo">Prenota la tua <span>E-Bike</span></h2>
     <p data-i18n="prenota_sottotitolo">Compila il modulo — ti ricontattiamo entro poche ore per confermare</p>
   </div>
   <div class="form-container">
@@ -489,8 +706,25 @@
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label data-i18n="form_tipo_bici">Tipo di E-Bike *</label>
+          <select name="tipo_bici" id="tipo-bici" required onchange="calcolaPrezzo()">
+            <option value="city">🚲 E-Bike City</option>
+            <option value="mtb">🚵 E-MTB Trail</option>
+            <option value="gruppo">👥 Pacchetto Gruppo (4 bici)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="form_durata">Durata *</label>
+          <select name="durata" id="durata" required onchange="calcolaPrezzo()">
+            <option value="mezza">☀️ Mezza giornata</option>
+            <option value="giornata">🌅 Giornata intera (entro 24h)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label data-i18n="form_bici">Numero di bici *</label>
-          <select name="num_bici" required>
+          <select name="num_bici" id="num-bici" required onchange="calcolaPrezzo()">
             <option value="" data-i18n="scegli_bici">Quante bici?</option>
             <option>1</option><option>2</option><option>3</option>
             <option>4</option><option>5</option><option>6+</option>
@@ -506,6 +740,21 @@
             <option data-i18n="non_so">Non so ancora</option>
           </select>
         </div>
+      </div>
+
+      <!-- RIEPILOGO PREZZO -->
+      <div id="prezzo-box" style="display:none; background:linear-gradient(135deg,var(--verde),var(--azzurro)); color:white; border-radius:15px; padding:18px 22px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:.85rem; opacity:.85;" id="prezzo-dettaglio">—</div>
+            <div id="prezzo-supplemento" style="font-size:.8rem; opacity:.75; margin-top:3px;"></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:.8rem; opacity:.8;">Totale</div>
+            <div style="font-size:1.8rem; font-weight:800;" id="prezzo-totale">—</div>
+          </div>
+        </div>
+        <div style="font-size:.75rem; opacity:.7; margin-top:8px;">💳 Pagamento sicuro con carta di credito, PayPal, Google Pay</div>
       </div>
       <div class="form-row">
         <div class="form-group full">
@@ -623,41 +872,54 @@ document.getElementById('data-input').addEventListener('change', async function(
   } catch(e) {}
 });
 
-// Invio prenotazione con traduzione automatica in italiano per Nina
+// Calcola prezzo in tempo reale
+async function calcolaPrezzo() {
+  const tipoBici = document.getElementById('tipo-bici').value;
+  const durata = document.getElementById('durata').value;
+  const numBici = document.getElementById('num-bici').value;
+  const oraRitiro = document.querySelector('[name="ora_ritiro"]').value;
+  if (!numBici) return;
+
+  const res = await fetch('/api/calcola-prezzo', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ tipo_bici: tipoBici, durata, num_bici: numBici, ora_ritiro: oraRitiro || '09:00' })
+  });
+  const d = await res.json();
+  document.getElementById('prezzo-box').style.display = 'block';
+  document.getElementById('prezzo-totale').textContent = `€${d.totale_euro.toFixed(2)}`;
+  document.getElementById('prezzo-dettaglio').textContent = d.dettaglio;
+  document.getElementById('prezzo-supplemento').textContent = d.supplemento_notte ? '🌙 Supplemento notturno incluso (+€10)' : '';
+  document.querySelector('.btn-submit').textContent = `💳 Paga €${d.totale_euro.toFixed(2)} e Prenota`;
+}
+
+// Invio prenotazione → salva in sessionStorage → vai al contratto
 document.getElementById('form-prenota').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = this.querySelector('.btn-submit');
-  btn.textContent = t('form_invio') || 'Invio in corso...';
-  btn.disabled = true;
 
   const datiGrezzi = {};
   new FormData(this).forEach((v, k) => datiGrezzi[k] = v);
+  const data = traduciFormInItaliano ? traduciFormInItaliano(datiGrezzi) : datiGrezzi;
 
-  // Traduce i dati del form in italiano per Nina
-  const data = traduciFormInItaliano(datiGrezzi);
+  // Recupera il prezzo totale calcolato (rimuove il simbolo €)
+  const prezzoTxt = document.getElementById('prezzo-totale').textContent || '';
+  data.totale_euro = prezzoTxt.replace('€','').trim();
+  data._dettaglio = document.getElementById('prezzo-dettaglio').textContent || '';
 
-  try {
-    const res = await fetch('/api/prenota', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      document.getElementById('success-text').textContent = t('form_successo');
-      document.getElementById('success-msg').style.display = 'block';
-      this.style.display = 'none';
-    } else {
-      alert('Errore: ' + result.errore);
-      btn.textContent = t('form_invia');
-      btn.disabled = false;
-    }
-  } catch(e) {
-    alert(t('form_errore') || 'Errore di connessione. Riprova.');
-    btn.textContent = t('form_invia');
-    btn.disabled = false;
-  }
+  // Salva tutto in sessionStorage e vai al contratto
+  sessionStorage.setItem('prenotazione_dati', JSON.stringify(data));
+  window.location.href = '/contratto';
 });
+
+// Preseleziona tipo bici dal pulsante percorso
+function preselezionaBici(tipo) {
+  const sel = document.getElementById('tipo-bici');
+  if (sel) { sel.value = tipo; calcolaPrezzo(); }
+}
+
+// Aggiorna prezzo quando cambia l'ora
+document.querySelector('[name="ora_ritiro"]').addEventListener('change', calcolaPrezzo);
 
 // Data minima = oggi
 document.getElementById('data-input').min = new Date().toISOString().split('T')[0];

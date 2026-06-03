@@ -496,8 +496,11 @@ pois.forEach(poi => {
     `, {maxWidth:220});
 });
 
-// Mostra percorso 0 di default
-mostraPercorso(0);
+// Legge ?percorso=N dalla URL e mostra quel percorso, altrimenti mostra il 0
+const urlParams = new URLSearchParams(window.location.search);
+const percorsoParam = urlParams.get('percorso');
+const percorsoIniziale = (percorsoParam !== null && !isNaN(percorsoParam)) ? parseInt(percorsoParam) : 0;
+mostraPercorso(percorsoIniziale);
 
 function zoomPoi(lat, lon) {
   map.setView([lat, lon], 16);

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento Confermato – ZingaroEbike</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#0077b6,#2d7d46); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .box { background:white; border-radius:25px; padding:50px 40px; text-align:center; max-width:480px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+  .check { font-size:4rem; margin-bottom:15px; }
+  h1 { font-size:1.8rem; font-weight:800; color:#2d7d46; margin-bottom:10px; }
+  p { color:#666; margin-bottom:8px; font-size:.95rem; }
+  .id { background:#e8f5e9; color:#2d7d46; padding:8px 20px; border-radius:20px; font-weight:700; display:inline-block; margin:15px 0; }
+  .btn { display:inline-block; background:#2d7d46; color:white; padding:14px 30px; border-radius:15px; text-decoration:none; font-weight:700; margin-top:20px; }
+  .btn:hover { background:#4caf50; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="check">✅</div>
+  <h1>Pagamento Confermato!</h1>
+  <p>Grazie per aver prenotato con <strong>ZingaroEbike</strong>!</p>
+  <p>La tua prenotazione è confermata.</p>
+  <div class="id">Prenotazione #{{ id }}</div>
+  <p>Riceverai una email di conferma a breve.<br>Ti contatteremo per i dettagli della consegna 🚴</p>
+  <a href="/" class="btn">🏠 Torna alla Home</a>
+</div>
+</body>
+</html>
