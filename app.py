@@ -47,6 +47,7 @@ DB_PATH = os.environ.get('DB_PATH', os.path.join(os.path.dirname(__file__), 'dat
 if os.path.exists('/data'):
     DB_PATH = '/data/prenotazioni.db'
 
+
 def init_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -87,6 +88,9 @@ def init_db():
             c.execute(f"ALTER TABLE prenotazioni ADD COLUMN {nome_col} {definizione}")
     conn.commit()
     conn.close()
+
+# Eseguito subito all'avvio — funziona sia con 'python app.py' che con gunicorn (Render)
+init_db()
 
 @app.route('/')
 def index():
