@@ -73,6 +73,18 @@ def init_db():
             creata_il TEXT DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    # Aggiunge le colonne mancanti se il DB esiste già dalla versione precedente
+    colonne_da_aggiungere = [
+        ('tipo_bici',        "TEXT DEFAULT 'city'"),
+        ('durata',           "TEXT DEFAULT 'mezza'"),
+        ('importo_totale',   "INTEGER DEFAULT 0"),
+        ('pagamento_stato',  "TEXT DEFAULT 'non pagato'"),
+        ('stripe_session_id',"TEXT"),
+    ]
+    colonne_esistenti = [row[1] for row in c.execute("PRAGMA table_info(prenotazioni)").fetchall()]
+    for nome_col, definizione in colonne_da_aggiungere:
+        if nome_col not in colonne_esistenti:
+            c.execute(f"ALTER TABLE prenotazioni ADD COLUMN {nome_col} {definizione}")
     conn.commit()
     conn.close()
 

@@ -51,6 +51,7 @@
     display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
     border:2px solid #e0e0e0; border-radius:12px; margin-bottom:12px;
     cursor:pointer; transition:border-color .2s, background .2s;
+    user-select:none;
   }
   .check-row:hover { border-color:var(--verde); background:#f9fffe; }
   .check-row.checked { border-color:var(--verde); background:#f0f9f4; }
@@ -58,9 +59,8 @@
     width:22px; height:22px; flex-shrink:0; margin-top:2px;
     accent-color:var(--verde); cursor:pointer;
   }
-  .check-row label { font-size:.87rem; color:#333; cursor:pointer; line-height:1.6; }
-  .check-row label strong { color:var(--scuro); }
-  .check-row label a { color:var(--azzurro); }
+  .check-row span { font-size:.87rem; color:#333; line-height:1.6; }
+  .check-row span strong { color:var(--scuro); }
 
   .btn-paga {
     width:100%; background:var(--verde); color:white; border:none;
@@ -109,21 +109,21 @@
   <div class="accettazione">
     <h2>✅ Accettazione</h2>
 
-    <div class="check-row" id="row-condizioni" onclick="toggleCheck('condizioni')">
+    <label class="check-row" id="row-condizioni" for="condizioni">
       <input type="checkbox" id="condizioni" onchange="aggiorna()">
-      <label for="condizioni" onclick="event.stopPropagation()">
+      <span>
         <strong>Condizioni di noleggio</strong><br>
         Dichiaro di aver letto e di accettare le condizioni di noleggio: utilizzo responsabile della e-bike, restituzione entro i termini concordati, responsabilità per danni o furto causati da negligenza, politica di cancellazione (rimborso completo oltre 48h, 50% tra 24-48h, nessun rimborso entro 24h).
-      </label>
-    </div>
+      </span>
+    </label>
 
-    <div class="check-row" id="row-privacy" onclick="toggleCheck('privacy')">
+    <label class="check-row" id="row-privacy" for="privacy">
       <input type="checkbox" id="privacy" onchange="aggiorna()">
-      <label for="privacy" onclick="event.stopPropagation()">
+      <span>
         <strong>Privacy (GDPR)</strong><br>
         Acconsento al trattamento dei miei dati personali da parte di Terraferma Cooperativa Sociale esclusivamente per la gestione della prenotazione, ai sensi del Reg. UE 2016/679.
-      </label>
-    </div>
+      </span>
+    </label>
 
     <br>
     <button class="btn-paga" id="btn-paga" disabled onclick="procediPagamento()">
@@ -154,12 +154,6 @@ if (prenotazione.nome) {
   `;
 } else {
   cont.innerHTML = '<div class="dato-row"><span class="dato-label" style="color:#c00">Nessun dato trovato. <a href="/#prenota">Torna alla prenotazione →</a></span></div>';
-}
-
-function toggleCheck(id) {
-  const cb = document.getElementById(id);
-  cb.checked = !cb.checked;
-  aggiorna();
 }
 
 function aggiorna() {
